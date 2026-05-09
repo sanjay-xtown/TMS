@@ -1,0 +1,38 @@
+import { DataTypes } from "sequelize";
+import { sequelize } from "../../config/db.js";
+
+export const School = sequelize.define("School", {
+  id: {
+    type: DataTypes.INTEGER,
+    autoIncrement: true,
+    primaryKey: true,
+  },
+  schoolName: {
+    type: DataTypes.STRING,
+    allowNull: false,
+    validate: { notEmpty: true },
+  },
+  address: {
+    type: DataTypes.STRING,
+    allowNull: false,
+    validate: { notEmpty: true },
+  },
+  phone: {
+    type: DataTypes.STRING,
+    allowNull: false,
+    validate: { notEmpty: true },
+  },
+  email: {
+    type: DataTypes.STRING,
+    allowNull: false,
+    unique: true,
+    validate: { isEmail: true },
+  },
+  principalName: {
+    type: DataTypes.STRING,
+    allowNull: false,
+    validate: { notEmpty: true },
+  },
+}, {
+  timestamps: true,
+});
