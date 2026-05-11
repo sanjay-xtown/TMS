@@ -33,6 +33,14 @@ export const School = sequelize.define("School", {
     allowNull: false,
     validate: { notEmpty: true },
   },
+  latitude: {
+    type: DataTypes.FLOAT,
+    allowNull: true,
+  },
+  longitude: {
+    type: DataTypes.FLOAT,
+    allowNull: true,
+  },
 }, {
   timestamps: true,
 });

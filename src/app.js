@@ -2,6 +2,7 @@ import express from "express";
 import authRoutes from "./modules/auth/auth.routes.js";
 import schoolRoutes from "./modules/school/school.routes.js";
 import busRoutes from "./modules/bus/bus.routes.js";
+import trackingRoutes from "./modules/tracking/tracking.routes.js";
 import dashboardRoutes from "./modules/dashboard/dashboard.routes.js";
 
 const app = express();
@@ -13,6 +14,7 @@ app.use(express.json());
 app.use("/api/auth", authRoutes);
 app.use("/api/schools", schoolRoutes);
 app.use("/api/buses", busRoutes);
+app.use("/api/tracking", trackingRoutes);
 app.use("/api", dashboardRoutes);
 
 // Health check

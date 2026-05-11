@@ -3,7 +3,7 @@ import { School } from "./school.model.js";
 // CREATE SCHOOL
 export const createSchool = async (req, res) => {
   try {
-    const { schoolName, address, phone, email, principalName } = req.body;
+    const { schoolName, address, phone, email, principalName, latitude, longitude } = req.body;
 
     // Check if school email already exists
     const existingSchool = await School.findOne({ where: { email } });
@@ -17,6 +17,8 @@ export const createSchool = async (req, res) => {
       phone,
       email,
       principalName,
+      latitude,
+      longitude,
     });
 
     res.status(201).json({
@@ -65,7 +67,7 @@ export const getSchoolById = async (req, res) => {
 export const updateSchool = async (req, res) => {
   try {
     const { id } = req.params;
-    const { schoolName, address, phone, email, principalName } = req.body;
+    const { schoolName, address, phone, email, principalName, latitude, longitude } = req.body;
 
     const school = await School.findByPk(id);
     if (!school) {
@@ -86,6 +88,8 @@ export const updateSchool = async (req, res) => {
       phone: phone || school.phone,
       email: email || school.email,
       principalName: principalName || school.principalName,
+      latitude: latitude !== undefined ? latitude : school.latitude,
+      longitude: longitude !== undefined ? longitude : school.longitude,
     });
 
     res.status(200).json({

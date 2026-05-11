@@ -39,7 +39,28 @@ export const Bus = sequelize.define("Bus", {
   },
   driverPhoneNumber: {
     type: DataTypes.STRING,
-    allowNull: true, // Allowed null to prevent sync error with existing rows
+    allowNull: true,
+  },
+  latitude: {
+    type: DataTypes.FLOAT,
+    allowNull: true,
+  },
+  longitude: {
+    type: DataTypes.FLOAT,
+    allowNull: true,
+  },
+  speed: {
+    type: DataTypes.FLOAT,
+    allowNull: true,
+    defaultValue: 0,
+  },
+  status: {
+    type: DataTypes.ENUM("moving", "stopped", "offline"),
+    defaultValue: "offline",
+  },
+  lastUpdated: {
+    type: DataTypes.DATE,
+    allowNull: true,
   },
 }, {
   timestamps: true,
