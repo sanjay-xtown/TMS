@@ -1,22 +1,10 @@
-import express from "express";
-import * as schoolController from "./school.controller.js";
-import { authMiddleware } from "../../shared/middleware/authMiddleware.js";
-import { roleMiddleware } from "../../shared/middleware/roleMiddleware.js";
+import express from 'express';
+import { createSchool, getMySchool } from './school.controller.js';
+import { verifyToken } from '../../middleware/auth.middleware.js';
 
 const router = express.Router();
 
-// Public routes (if any) - none for school management
-
-// Protected routes
-router.use(authMiddleware);
-
-// GET routes: Allowed for superadmin and school_admin
-router.get("/", roleMiddleware("superadmin", "school_admin"), schoolController.getAllSchools);
-router.get("/:id", roleMiddleware("superadmin", "school_admin"), schoolController.getSchoolById);
-
-// Mutation routes: Allowed ONLY for superadmin
-router.post("/", roleMiddleware("superadmin"), schoolController.createSchool);
-router.put("/:id", roleMiddleware("superadmin"), schoolController.updateSchool);
-router.delete("/:id", roleMiddleware("superadmin"), schoolController.deleteSchool);
+router.post('/create', verifyToken, createSchool);
+router.get('/my-school', verifyToken, getMySchool);
 
 export default router;

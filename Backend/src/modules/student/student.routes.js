@@ -1,17 +1,14 @@
 import express from 'express';
-import * as studentController from './student.controller.js';
-import { authMiddleware } from '../../shared/middleware/authMiddleware.js';
-import { roleMiddleware } from '../../shared/middleware/roleMiddleware.js';
+import { create, getAll, assignBus } from './student.controller.js';
+import { verifyToken, checkSchoolAccess } from '../../middleware/auth.middleware.js';
 
 const router = express.Router();
 
-// Only Admins or Schools can create/update/delete students
-router.use(authMiddleware);
+router.use(verifyToken);
+router.use(checkSchoolAccess);
 
-router.post('/create', roleMiddleware('superadmin', 'school_admin'), studentController.create);
-router.patch('/:id', roleMiddleware('superadmin', 'school_admin'), studentController.update);
-router.delete('/:id', roleMiddleware('superadmin', 'school_admin'), studentController.remove);
-router.get('/', roleMiddleware('superadmin', 'school_admin'), studentController.getAll);
-router.post('/:id/assign-bus', roleMiddleware('superadmin', 'school_admin'), studentController.assignBusToStudent);
+router.post('/create', create);
+router.get('/all', getAll);
+router.post('/assign-bus/:id', assignBus);
 
 export default router;

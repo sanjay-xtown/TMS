@@ -3,9 +3,13 @@ import sequelize from '../../config/db.js';
 
 const Student = sequelize.define('Student', {
   id: {
-    type: DataTypes.UUID,
-    defaultValue: DataTypes.UUIDV4,
+    type: DataTypes.INTEGER,
+    autoIncrement: true,
     primaryKey: true,
+  },
+  schoolId: {
+    type: DataTypes.INTEGER,
+    allowNull: false,
   },
   studentName: {
     type: DataTypes.STRING,
@@ -15,43 +19,14 @@ const Student = sequelize.define('Student', {
     type: DataTypes.STRING,
     allowNull: false,
   },
-  section: {
-    type: DataTypes.STRING,
-    allowNull: false,
-  },
-  gender: {
-    type: DataTypes.ENUM('Male', 'Female', 'Other'),
-    allowNull: false,
-  },
-  address: {
-    type: DataTypes.TEXT,
-    allowNull: false,
-  },
-  pickupPoint: {
-    type: DataTypes.STRING,
-    allowNull: false,
-  },
-  pickupLat: {
-    type: DataTypes.DECIMAL(10, 8),
+  busId: {
+    type: DataTypes.INTEGER,
     allowNull: true,
-  },
-  pickupLng: {
-    type: DataTypes.DECIMAL(11, 8),
-    allowNull: true,
-  },
-
-  schoolId: {
-    type: DataTypes.UUID,
-    allowNull: false,
   },
   parentId: {
-    type: DataTypes.UUID,
-    allowNull: false,
-  },
-  currentBusId: {
-    type: DataTypes.UUID,
+    type: DataTypes.INTEGER,
     allowNull: true,
-  },
+  }
 }, {
   tableName: 'students',
   timestamps: true,

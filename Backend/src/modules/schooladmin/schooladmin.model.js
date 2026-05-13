@@ -1,5 +1,5 @@
 import { DataTypes } from "sequelize";
-import sequelize from "../../../config/db.js";
+import sequelize from "../../config/db.js";
 import bcrypt from "bcrypt";
 
 export const SchoolAdmin = sequelize.define("SchoolAdmin", {
@@ -8,12 +8,11 @@ export const SchoolAdmin = sequelize.define("SchoolAdmin", {
     defaultValue: DataTypes.UUIDV4,
     primaryKey: true,
   },
-  username: {
+  adminName: {
     type: DataTypes.STRING,
     allowNull: false,
-    unique: true,
   },
-  email: {
+  adminEmail: {
     type: DataTypes.STRING,
     allowNull: false,
     unique: true,
@@ -23,13 +22,21 @@ export const SchoolAdmin = sequelize.define("SchoolAdmin", {
     type: DataTypes.STRING,
     allowNull: false,
   },
-  schoolId: {
-    type: DataTypes.UUID,
+  schoolName: {
+    type: DataTypes.STRING,
+    allowNull: false,
+  },
+  schoolLocation: {
+    type: DataTypes.STRING,
+    allowNull: false,
+  },
+  whatsappNumber: {
+    type: DataTypes.STRING,
     allowNull: false,
   },
   role: {
     type: DataTypes.STRING,
-    defaultValue: "schooladmin",
+    defaultValue: "school_admin",
   }
 }, {
   tableName: 'school_admins',
@@ -37,11 +44,6 @@ export const SchoolAdmin = sequelize.define("SchoolAdmin", {
   hooks: {
     beforeCreate: async (admin) => {
       if (admin.password) {
-        admin.password = await bcrypt.hash(admin.password, 10);
-      }
-    },
-    beforeUpdate: async (admin) => {
-      if (admin.changed('password')) {
         admin.password = await bcrypt.hash(admin.password, 10);
       }
     }
@@ -53,4 +55,3 @@ SchoolAdmin.prototype.comparePassword = async function (password) {
 };
 
 export default SchoolAdmin;
-

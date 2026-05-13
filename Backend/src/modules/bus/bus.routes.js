@@ -1,21 +1,13 @@
-import express from "express";
-import * as busController from "./bus.controller.js";
-import { authMiddleware } from "../../shared/middleware/authMiddleware.js";
-import { roleMiddleware } from "../../shared/middleware/roleMiddleware.js";
+import express from 'express';
+import { create, getAll } from './bus.controller.js';
+import { verifyToken, checkSchoolAccess } from '../../middleware/auth.middleware.js';
 
 const router = express.Router();
 
-router.use(authMiddleware);
+router.use(verifyToken);
+router.use(checkSchoolAccess);
 
-// GET routes: Allowed for superadmin, school_admin, and driver
-router.get("/", roleMiddleware("superadmin", "school_admin", "driver"), busController.getAllBuses);
-router.get("/:id", roleMiddleware("superadmin", "school_admin", "driver"), busController.getBusById);
-
-// Create/Update: Allowed for superadmin and school_admin
-router.post("/", roleMiddleware("superadmin", "school_admin"), busController.createBus);
-router.put("/:id", roleMiddleware("superadmin", "school_admin"), busController.updateBus);
-
-// Delete: ONLY superadmin
-router.delete("/:id", roleMiddleware("superadmin"), busController.deleteBus);
+router.post('/create', create);
+router.get('/all', getAll);
 
 export default router;

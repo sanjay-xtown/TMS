@@ -1,58 +1,35 @@
 import express from 'express';
 import cors from 'cors';
 import dotenv from 'dotenv';
-import { errorMiddleware } from './shared/middleware/errorMiddleware.js';
-
-// Import Routes
-import parentRoutes from './modules/parent/parent.routes.js';
-import studentRoutes from './modules/student/student.routes.js';
-import trackingRoutes from './modules/tracking/tracking.routes.js';
-import transferRoutes from './modules/transfer/transfer.routes.js';
-import dashboardRoutes from './modules/dashboard/dashboard.routes.js';
+import superAdminRoutes from './modules/superadmin/superadmin.routes.js';
+import schoolAdminRoutes from './modules/schooladmin/schooladmin.routes.js';
+import settingsRoutes from './modules/settings/settings.routes.js';
 import authRoutes from './modules/auth/auth.routes.js';
 import schoolRoutes from './modules/school/school.routes.js';
 import busRoutes from './modules/bus/bus.routes.js';
-import busStatusRoutes from './modules/busStatus/busStatus.routes.js';
-import superAdminRoutes from './modules/auth/superadmin/superadmin.routes.js';
-import schoolAdminRoutes from './modules/auth/schooladmin/schooladmin.routes.js';
+import studentRoutes from './modules/student/student.routes.js';
+import parentRoutes from './modules/parent/parent.routes.js';
 
 dotenv.config();
 
 const app = express();
 
-// Middlewares
 app.use(cors());
 app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
 
-// Request Logger for Debugging
-app.use((req, res, next) => {
-  console.log(`${req.method} ${req.url}`);
-  next();
-});
+// Routes
+app.use('/api/superadmin', superAdminRoutes);
+app.use('/api/schooladmin', schoolAdminRoutes);
+app.use('/api/settings', settingsRoutes);
+app.use('/api/auth', authRoutes);
+app.use('/api/school', schoolRoutes);
+app.use('/api/bus', busRoutes);
+app.use('/api/student', studentRoutes);
+app.use('/api/parent', parentRoutes);
 
 // Base Route
 app.get('/', (req, res) => {
-  res.status(200).json({
-    message: 'Welcome to School Bus Tracking System API',
-    version: '1.0.0'
-  });
+  res.json({ message: "Bus Tracking System API" });
 });
-
-// Register Routes
-app.use('/api/auth', authRoutes);
-app.use('/api/parents', parentRoutes);
-app.use('/api/students', studentRoutes);
-app.use('/api/tracking', trackingRoutes);
-app.use('/api/transfer', transferRoutes);
-app.use('/api/dashboard', dashboardRoutes);
-app.use('/api/schools', schoolRoutes);
-app.use('/api/bus', busRoutes);
-app.use('/api/bus-status', busStatusRoutes);
-app.use('/api/superadmin', superAdminRoutes);
-app.use('/api/schooladmin', schoolAdminRoutes);
-
-// Global Error Handler
-app.use(errorMiddleware);
 
 export default app;

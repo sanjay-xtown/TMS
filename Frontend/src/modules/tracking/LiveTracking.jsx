@@ -21,8 +21,9 @@ const LiveTracking = () => {
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
-      className="h-screen bg-[#0F0F0F] flex flex-col relative overflow-hidden"
+      className="h-screen bg-[#121416] flex flex-col relative overflow-hidden"
     >
+
       {/* Mock Map Background */}
       <div className="absolute inset-0 bg-[#111111]">
         {/* Simple Mock Map Elements (Grid Lines for Map feel) */}

@@ -1,69 +1,22 @@
-import * as busService from './bus.service.js';
-import { createBusSchema, updateBusSchema } from './bus.schema.js';
+import Bus from './bus.model.js';
 
-export const createBus = async (req, res, next) => {
-  try {
-    const busData = createBusSchema.parse(req.body);
-    const bus = await busService.createBus(busData);
-
-    res.status(201).json({
-      status: 'success',
-      message: 'Bus created successfully',
-      data: bus,
-    });
-  } catch (error) {
-    next(error);
-  }
+export const create = async (req, res) => {
+    try {
+        const bus = await Bus.create({
+            ...req.body,
+            schoolId: req.user.schoolId
+        });
+        res.status(201).json({ success: true, data: bus });
+    } catch (error) {
+        res.status(500).json({ success: false, message: error.message });
+    }
 };
 
-export const getAllBuses = async (req, res, next) => {
-  try {
-    const buses = await busService.getAllBuses(req.user?.role);
-    res.status(200).json({
-      status: 'success',
-      count: buses.length,
-      data: buses,
-    });
-  } catch (error) {
-    next(error);
-  }
-};
-
-export const getBusById = async (req, res, next) => {
-  try {
-    const bus = await busService.getBusById(req.params.id, req.user?.role);
-    res.status(200).json({
-      status: 'success',
-      data: bus,
-    });
-  } catch (error) {
-    next(error);
-  }
-};
-
-export const updateBus = async (req, res, next) => {
-  try {
-    const busData = updateBusSchema.parse(req.body);
-    const bus = await busService.updateBus(req.params.id, busData);
-
-    res.status(200).json({
-      status: 'success',
-      message: 'Bus updated successfully',
-      data: bus,
-    });
-  } catch (error) {
-    next(error);
-  }
-};
-
-export const deleteBus = async (req, res, next) => {
-  try {
-    await busService.deleteBus(req.params.id);
-    res.status(200).json({
-      status: 'success',
-      message: 'Bus deleted successfully',
-    });
-  } catch (error) {
-    next(error);
-  }
+export const getAll = async (req, res) => {
+    try {
+        const buses = await Bus.findAll({ where: { schoolId: req.user.schoolId } });
+        res.status(200).json({ success: true, data: buses });
+    } catch (error) {
+        res.status(500).json({ success: false, message: error.message });
+    }
 };

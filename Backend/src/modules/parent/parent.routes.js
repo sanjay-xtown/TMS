@@ -2,6 +2,7 @@ import express from 'express';
 import * as parentController from './parent.controller.js';
 import { authMiddleware } from '../../shared/middleware/authMiddleware.js';
 import { roleMiddleware } from '../../shared/middleware/roleMiddleware.js';
+import { verifyToken, checkSchoolAccess } from '../../middleware/auth.middleware.js';
 
 const router = express.Router();
 
@@ -37,5 +38,10 @@ router.patch('/profile', authMiddleware, parentController.updateProfile);
  * @access  Private (Admin)
  */
 router.patch('/:id', authMiddleware, roleMiddleware('superadmin', 'school_admin'), parentController.adminUpdateParent);
+
+// --- School Admin Routes ---
+router.post('/create', verifyToken, checkSchoolAccess, parentController.createParent);
+router.get('/all', verifyToken, checkSchoolAccess, parentController.getAllParents);
+router.post('/send-invitation', verifyToken, checkSchoolAccess, parentController.sendInvitation);
 
 export default router;

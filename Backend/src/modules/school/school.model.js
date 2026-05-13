@@ -3,47 +3,33 @@ import sequelize from "../../config/db.js";
 
 export const School = sequelize.define("School", {
   id: {
-    type: DataTypes.UUID,
-    defaultValue: DataTypes.UUIDV4,
+    type: DataTypes.INTEGER,
+    autoIncrement: true,
     primaryKey: true,
   },
-  schoolName: {
+  name: {
     type: DataTypes.STRING,
     allowNull: false,
-    validate: { notEmpty: true },
   },
   address: {
+    type: DataTypes.TEXT,
+    allowNull: false,
+  },
+  city: {
     type: DataTypes.STRING,
     allowNull: false,
-    validate: { notEmpty: true },
   },
   phone: {
     type: DataTypes.STRING,
     allowNull: false,
-    validate: { notEmpty: true },
   },
-  email: {
+  logo: {
     type: DataTypes.STRING,
-    allowNull: false,
-    unique: true,
-    validate: { isEmail: true },
-  },
-  principalName: {
-    type: DataTypes.STRING,
-    allowNull: false,
-    validate: { notEmpty: true },
-  },
-  latitude: {
-    type: DataTypes.FLOAT,
     allowNull: true,
   },
-  longitude: {
-    type: DataTypes.FLOAT,
-    allowNull: true,
-  },
-  status: {
-    type: DataTypes.ENUM("PENDING", "APPROVED", "REJECTED"),
-    defaultValue: "PENDING",
+  createdBy: {
+    type: DataTypes.INTEGER,
+    allowNull: false,
   },
 }, {
   tableName: 'schools',

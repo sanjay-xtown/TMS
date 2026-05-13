@@ -1,17 +1,28 @@
 @import "tailwindcss";
 
 @theme {
-  --color-background: #000000;
-  --color-foreground: #ffffff;
-  --color-primary: #FACC15;
-  --color-card: #111111;
-  --color-muted: #1F1F1F;
-  --color-accent: #FACC15;
-  --color-border: #262626;
+  /* Light Mode / Base */
+  --color-background: #F8F9FA;
+  --color-foreground: #121416;
+
+  /* Matte Olive Green brand */
+  --color-primary: #88B04B;
+  --color-accent: #88B04B;
+
+  /* Surface panels */
+  --color-card: rgba(255, 255, 255, 0.6);
+  --color-muted: rgba(18, 20, 22, 0.75);
+  --color-border: rgba(18, 20, 22, 0.08);
+
+  /* Accents */
+  --color-amber: #F59E0B;
+  --color-soft-red: #EF4444;
+
   --radius-lg: 1.5rem;
   --radius-md: 1rem;
   --radius-sm: 0.5rem;
 }
+
 
 @layer base {
   * {

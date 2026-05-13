@@ -1,5 +1,5 @@
 import { DataTypes } from "sequelize";
-import sequelize from "../../../config/db.js";
+import sequelize from "../../config/db.js";
 import bcrypt from "bcrypt";
 
 export const SuperAdmin = sequelize.define("SuperAdmin", {
@@ -49,4 +49,3 @@ SuperAdmin.prototype.comparePassword = async function (password) {
 };
 
 export default SuperAdmin;
-

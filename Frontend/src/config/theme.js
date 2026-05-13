@@ -1,22 +1,36 @@
 export const themeConfig = {
   colors: {
-    primary: "#FACC15", // Premium Yellow
-    background: "#000000", // Pure Black
-    card: "#111111", // Dark Gray Card
+    // Matte Olive Green brand identity (Light & Dark)
+    primary: "#88B04B",
+
+    // Cinematic night concept base
+    background: "#121416",
+    card: "rgba(26, 28, 30, 0.7)",
+
     text: {
       primary: "#FFFFFF",
-      secondary: "#9CA3AF",
-      inverse: "#000000"
+      secondary: "#94A3B8",
+      inverse: "#121416",
     },
+
+    accents: {
+      amber: "#F59E0B",
+      softRed: "#EF4444",
+    },
+
     status: {
-      onTime: "#22C55E",
+      // LIVE/on-time indicator
+      onTime: "#88B04B",
+      // offline / emergency
       emergency: "#EF4444",
-      alert: "#FACC15"
-    }
+      // warnings / alerts
+      alert: "#F59E0B",
+    },
   },
   borderRadius: {
     card: "24px",
     button: "12px",
-    input: "12px"
-  }
+    input: "12px",
+  },
 };
+

@@ -1,69 +1,45 @@
-import * as schoolService from './school.service.js';
-import { createSchoolSchema, updateSchoolSchema } from './school.schema.js';
+import { School } from './school.model.js';
+import User from '../user/user.model.js';
 
 export const createSchool = async (req, res, next) => {
   try {
-    const schoolData = createSchoolSchema.parse(req.body);
-    const school = await schoolService.createSchool(schoolData);
+    const { name, address, city, phone, logo } = req.body;
+    const adminId = req.user.id;
+
+    // 1. Create the school
+    const school = await School.create({
+      name,
+      address,
+      city,
+      phone,
+      logo,
+      createdBy: adminId
+    });
+
+    // 2. Update the admin user with the schoolId
+    await User.update(
+      { schoolId: school.id },
+      { where: { id: adminId } }
+    );
 
     res.status(201).json({
-      status: 'success',
+      success: true,
       message: 'School created successfully',
-      data: school,
+      school: school,
     });
   } catch (error) {
-    next(error);
+    res.status(500).json({ success: false, message: error.message });
   }
 };
 
-export const getAllSchools = async (req, res, next) => {
-  try {
-    const schools = await schoolService.getAllSchools();
-    res.status(200).json({
-      status: 'success',
-      count: schools.length,
-      data: schools,
-    });
-  } catch (error) {
-    next(error);
-  }
-};
-
-export const getSchoolById = async (req, res, next) => {
-  try {
-    const school = await schoolService.getSchoolById(req.params.id);
-    res.status(200).json({
-      status: 'success',
-      data: school,
-    });
-  } catch (error) {
-    next(error);
-  }
-};
-
-export const updateSchool = async (req, res, next) => {
-  try {
-    const schoolData = updateSchoolSchema.parse(req.body);
-    const school = await schoolService.updateSchool(req.params.id, schoolData);
-
-    res.status(200).json({
-      status: 'success',
-      message: 'School updated successfully',
-      data: school,
-    });
-  } catch (error) {
-    next(error);
-  }
-};
-
-export const deleteSchool = async (req, res, next) => {
-  try {
-    await schoolService.deleteSchool(req.params.id);
-    res.status(200).json({
-      status: 'success',
-      message: 'School deleted successfully',
-    });
-  } catch (error) {
-    next(error);
-  }
+export const getMySchool = async (req, res) => {
+    try {
+        const school = await School.findOne({ 
+            where: { createdBy: req.user.id } 
+        });
+        if (!school) return res.status(404).json({ success: false, message: "School not found" });
+        res.status(200).json({ success: true, data: school });
+    } catch (error) {
+        res.status(500).json({ success: false, message: error.message });
+    }
 };
