@@ -50,3 +50,29 @@ export const getAllAdmins = async () => {
     ]
   });
 };
+
+export const updateAdmin = async (id, adminData) => {
+  const admin = await Admin.findByPk(id);
+  if (!admin) {
+    throw new AppError('Admin not found', 404);
+  }
+
+  if (adminData.password) {
+    adminData.password = await hashPassword(adminData.password);
+  } else {
+    delete adminData.password;
+  }
+
+  await admin.update(adminData);
+  const { password: _, ...adminResult } = admin.toJSON();
+  return adminResult;
+};
+
+export const deleteAdmin = async (id) => {
+  const admin = await Admin.findByPk(id);
+  if (!admin) {
+    throw new AppError('Admin not found', 404);
+  }
+  await admin.destroy();
+  return true;
+};

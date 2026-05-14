@@ -15,17 +15,23 @@ import {
   MoreVertical,
   X,
   Save,
-  ShieldCheck
+  ShieldCheck,
+  Search,
+  Filter
 } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Card, Button, Badge, Input } from '../../../shared/components/ui';
 import api from '../../../shared/api';
+import { toast } from 'sonner';
 
 const BusManagement = () => {
   const [buses, setBuses] = useState([]);
   const [loading, setLoading] = useState(true);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [submitting, setSubmitting] = useState(false);
+  const [isEditing, setIsEditing] = useState(false);
+  const [editingBusId, setEditingBusId] = useState(null);
+  const [searchQuery, setSearchQuery] = useState('');
 
   const [formData, setFormData] = useState({
     busNumber: '',
@@ -33,7 +39,9 @@ const BusManagement = () => {
     driverName: '',
     gpsProvider: 'Traccar',
     gpsDeviceId: '',
-    status: 'Active'
+    status: 'Active',
+    capacity: 40,
+    routeName: ''
   });
 
   useEffect(() => {
@@ -46,54 +54,116 @@ const BusManagement = () => {
       setBuses(response.data.data || []);
     } catch (error) {
       console.error('Error fetching buses:', error);
+      toast.error('Failed to synchronize fleet data');
     } finally {
       setLoading(false);
     }
   };
 
-  const handleRegister = async (e) => {
+  const handleOpenModal = (bus = null) => {
+    if (bus) {
+      setIsEditing(true);
+      setEditingBusId(bus.id);
+      setFormData({
+        busNumber: bus.busNumber || '',
+        busRegisterNumber: bus.busRegisterNumber || '',
+        driverName: bus.driverName || '',
+        gpsProvider: bus.gpsProvider || 'Traccar',
+        gpsDeviceId: bus.gpsDeviceId || '',
+        status: bus.status || 'Active',
+        capacity: bus.capacity || 40,
+        routeName: bus.routeName || ''
+      });
+    } else {
+      setIsEditing(false);
+      setEditingBusId(null);
+      setFormData({
+        busNumber: '', busRegisterNumber: '', driverName: '', gpsProvider: 'Traccar', gpsDeviceId: '', status: 'Active', capacity: 40, routeName: ''
+      });
+    }
+    setIsModalOpen(true);
+  };
+
+  const handleSubmit = async (e) => {
     e.preventDefault();
     setSubmitting(true);
     try {
-      await api.post('/bus', formData);
+      if (isEditing) {
+        await api.put(`/bus/${editingBusId}`, formData);
+        toast.success(`Vehicle ${formData.busNumber} updated successfully`);
+      } else {
+        await api.post('/bus', formData);
+        toast.success(`Vehicle ${formData.busNumber} authorized in fleet`);
+      }
       setIsModalOpen(false);
       fetchBuses();
-      setFormData({
-        busNumber: '', busRegisterNumber: '', driverName: '', gpsProvider: 'Traccar', gpsDeviceId: '', status: 'Active'
-      });
     } catch (error) {
-      console.error('Registration failed:', error);
-      alert('Failed to register vehicle. Please check all fields.');
+      console.error('Operation failed:', error);
+      toast.error(error.response?.data?.message || 'Fleet operation failed');
     } finally {
       setSubmitting(false);
     }
   };
 
-  const handleDelete = async (id) => {
-    if (window.confirm('Are you sure you want to decommission this vehicle asset?')) {
+  const handleDelete = async (id, busNum) => {
+    if (window.confirm(`Are you sure you want to decommission Bus ${busNum} from the fleet registry?`)) {
       try {
         await api.delete(`/bus/${id}`);
+        toast.success(`Bus ${busNum} decommissioned`);
         fetchBuses();
       } catch (error) {
         console.error('Delete failed:', error);
+        toast.error('Failed to remove vehicle asset');
       }
     }
   };
 
+  const filteredBuses = buses.filter(bus => 
+    bus.busNumber?.toLowerCase().includes(searchQuery.toLowerCase()) ||
+    bus.busRegisterNumber?.toLowerCase().includes(searchQuery.toLowerCase()) ||
+    bus.driverName?.toLowerCase().includes(searchQuery.toLowerCase())
+  );
+
   return (
     <div className="space-y-8 pb-20">
-      <div className="flex flex-col md:flex-row md:items-center justify-between gap-6">
+      <div className="flex flex-col md:flex-row md:items-end justify-between gap-6">
         <div>
-          <h1 className="text-5xl font-black tracking-tighter text-foreground uppercase">Fleet Operations</h1>
+          <div className="flex items-center gap-4">
+            <h1 className="text-5xl font-black tracking-tighter text-foreground uppercase">Fleet Operations</h1>
+            <Badge variant="outline" className="h-8 px-4 !rounded-xl border-primary/20 text-primary font-black text-[10px] uppercase">
+              {filteredBuses.length} {searchQuery ? 'Found' : 'Total'}
+            </Badge>
+          </div>
           <p className="text-sm font-bold text-foreground/40 uppercase tracking-[0.3em] mt-1">Vehicle Asset & Telematics Management</p>
         </div>
         <Button 
-          onClick={() => setIsModalOpen(true)}
+          onClick={() => handleOpenModal()}
           className="!rounded-2xl h-16 !px-10 shadow-2xl shadow-primary/20 !bg-primary hover:scale-105 transition-all"
         >
           <Plus size={24} />
           Register New Vehicle
         </Button>
+      </div>
+
+      <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
+         <Card className="lg:col-span-4 !p-4 flex flex-col md:flex-row items-center gap-4 border-none shadow-xl bg-white">
+            <div className="flex-1 w-full relative">
+               <Search className="absolute left-5 top-1/2 -translate-y-1/2 text-foreground/20" size={20} />
+               <input 
+                 type="text" 
+                 placeholder="Search by bus number, registration, or driver..." 
+                 value={searchQuery}
+                 onChange={(e) => setSearchQuery(e.target.value)}
+                 className="w-full bg-slate-50 border-none rounded-2xl pl-14 pr-6 py-4 text-sm font-bold uppercase tracking-tight outline-none focus:ring-2 ring-primary/20 transition-all"
+               />
+            </div>
+            <div className="flex items-center gap-3 w-full md:w-auto">
+               <Button variant="secondary" className="!rounded-2xl h-14 !px-6 !bg-slate-50 border-none">
+                 <Filter size={18} />
+                 Status
+               </Button>
+            </div>
+         </Card>
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-8">
@@ -102,13 +172,13 @@ const BusManagement = () => {
             <div className="w-14 h-14 border-4 border-primary/20 border-t-primary rounded-full animate-spin mx-auto mb-6" />
             <p className="text-[10px] font-black uppercase tracking-[0.4em] text-foreground/20">Synchronizing Fleet Telematics...</p>
           </div>
-        ) : buses.length === 0 ? (
+        ) : filteredBuses.length === 0 ? (
           <div className="col-span-full py-32 text-center">
-             <p className="text-[10px] font-black uppercase tracking-[0.3em] text-foreground/20 italic">No active vehicles identified in current fleet</p>
+             <p className="text-[10px] font-black uppercase tracking-[0.3em] text-foreground/20 italic">No vehicles match your search</p>
           </div>
         ) : (
-          buses.map((bus) => (
-          <Card key={bus.id} className="p-10 space-y-8 group border-none shadow-xl bg-white hover:shadow-2xl transition-all rounded-[2rem] overflow-hidden relative">
+          filteredBuses.map((bus) => (
+          <Card key={bus.id} className="p-10 space-y-8 group border-none shadow-xl bg-white hover:shadow-2xl transition-all rounded-[2.5rem] overflow-hidden relative">
             <div className="absolute top-0 right-0 w-32 h-32 bg-primary/5 rounded-full -mr-16 -mt-16 group-hover:scale-150 transition-all duration-700" />
             
             <div className="flex justify-between items-start relative z-10">
@@ -153,18 +223,19 @@ const BusManagement = () => {
             </div>
 
             <div className="flex items-center gap-3 pt-4 relative z-10">
-               <Button variant="secondary" className="flex-1 !h-14 !rounded-2xl !bg-slate-50 border-none hover:!bg-primary hover:!text-white transition-all shadow-xl shadow-transparent hover:shadow-primary/10">
+               <Button 
+                onClick={() => handleOpenModal(bus)}
+                variant="secondary" 
+                className="flex-1 !h-14 !rounded-2xl !bg-slate-50 border-none hover:!bg-primary hover:!text-white transition-all shadow-xl shadow-transparent hover:shadow-primary/10"
+               >
                   <Edit2 size={18} />
                </Button>
                <Button 
-                onClick={() => handleDelete(bus.id)}
+                onClick={() => handleDelete(bus.id, bus.busNumber)}
                 variant="secondary" 
                 className="flex-1 !h-14 !rounded-2xl !bg-slate-50 border-none hover:!bg-error hover:!text-white transition-all shadow-xl shadow-transparent hover:shadow-error/10"
                >
                   <Trash2 size={18} />
-               </Button>
-               <Button variant="secondary" className="!h-14 !w-14 !p-0 !rounded-2xl !bg-slate-50 border-none hover:!bg-slate-900 hover:!text-white transition-all">
-                  <MoreVertical size={20} />
                </Button>
             </div>
           </Card>
@@ -172,7 +243,7 @@ const BusManagement = () => {
       )}
 
         <Card 
-          onClick={() => setIsModalOpen(true)}
+          onClick={() => handleOpenModal()}
           className="p-10 border-dashed border-2 border-slate-200 flex flex-col items-center justify-center text-center gap-6 hover:bg-primary/5 hover:border-primary/20 transition-all group cursor-pointer rounded-[2.5rem]"
         >
            <div className="w-20 h-20 rounded-full bg-slate-50 flex items-center justify-center text-slate-300 group-hover:text-primary group-hover:bg-primary/10 group-hover:scale-110 transition-all shadow-inner">
@@ -210,7 +281,7 @@ const BusManagement = () => {
                       <ShieldCheck size={32} />
                     </div>
                     <div>
-                      <h2 className="text-3xl font-black uppercase tracking-tight text-foreground">Register Vehicle</h2>
+                      <h2 className="text-3xl font-black uppercase tracking-tight text-foreground">{isEditing ? 'Update Vehicle' : 'Register Vehicle'}</h2>
                       <p className="text-[10px] font-black text-foreground/30 uppercase tracking-[0.3em] mt-1">Fleet Asset Registry • V2.0</p>
                     </div>
                   </div>
@@ -220,7 +291,7 @@ const BusManagement = () => {
                 </div>
 
                 {/* Modal Body */}
-                <form onSubmit={handleRegister} className="p-10 space-y-10">
+                <form onSubmit={handleSubmit} className="p-10 space-y-10">
                   <div className="grid grid-cols-2 gap-8">
                      <div className="space-y-2">
                         <label className="text-[9px] font-black uppercase tracking-widest text-foreground/30 px-2">Bus Identifier</label>
@@ -244,17 +315,33 @@ const BusManagement = () => {
                      </div>
                   </div>
 
-                  <div className="space-y-2">
-                     <label className="text-[9px] font-black uppercase tracking-widest text-foreground/30 px-2">Assigned Driver Name</label>
-                     <div className="relative">
-                        <User size={18} className="absolute left-6 top-1/2 -translate-y-1/2 text-foreground/20" />
-                        <input 
-                           required
-                           value={formData.driverName}
-                           onChange={(e) => setFormData({...formData, driverName: e.target.value})}
-                           className="w-full h-16 bg-slate-50 rounded-2xl pl-14 pr-6 text-sm font-black uppercase outline-none focus:ring-2 ring-primary/20 transition-all"
-                           placeholder="FULL NAME"
-                        />
+ 
+                  <div className="grid grid-cols-2 gap-8">
+                     <div className="space-y-2">
+                        <label className="text-[9px] font-black uppercase tracking-widest text-foreground/30 px-2">Assigned Driver Name</label>
+                        <div className="relative">
+                           <User size={18} className="absolute left-6 top-1/2 -translate-y-1/2 text-foreground/20" />
+                           <input 
+                              required
+                              value={formData.driverName}
+                              onChange={(e) => setFormData({...formData, driverName: e.target.value})}
+                              className="w-full h-16 bg-slate-50 rounded-2xl pl-14 pr-6 text-sm font-black uppercase outline-none focus:ring-2 ring-primary/20 transition-all"
+                              placeholder="FULL NAME"
+                           />
+                        </div>
+                     </div>
+                     <div className="space-y-2">
+                        <label className="text-[9px] font-black uppercase tracking-widest text-foreground/30 px-2">Route Name / Area</label>
+                        <div className="relative">
+                           <MapPin size={18} className="absolute left-6 top-1/2 -translate-y-1/2 text-foreground/20" />
+                           <input 
+                              required
+                              value={formData.routeName}
+                              onChange={(e) => setFormData({...formData, routeName: e.target.value})}
+                              className="w-full h-16 bg-slate-50 rounded-2xl pl-14 pr-6 text-sm font-black uppercase outline-none focus:ring-2 ring-primary/20 transition-all"
+                              placeholder="E.G. SARAVANAMPATTI"
+                           />
+                        </div>
                      </div>
                   </div>
 
@@ -267,20 +354,33 @@ const BusManagement = () => {
                            className="w-full h-16 bg-slate-50 rounded-2xl px-6 text-sm font-black uppercase outline-none cursor-pointer"
                         >
                            <option value="Traccar">Traccar Engine</option>
+                           <option value="Simulated">Simulated Node</option>
                            <option value="Standard">Standard GPS</option>
                            <option value="Enterprise">Enterprise Node</option>
                         </select>
                      </div>
                      <div className="space-y-2">
-                        <label className="text-[9px] font-black uppercase tracking-widest text-foreground/30 px-2">Hardware Device ID</label>
+                        <label className="text-[9px] font-black uppercase tracking-widest text-foreground/30 px-2">Vehicle Capacity</label>
                         <input 
+                           type="number"
                            required
-                           value={formData.gpsDeviceId}
-                           onChange={(e) => setFormData({...formData, gpsDeviceId: e.target.value})}
-                           className="w-full h-16 bg-slate-50 rounded-2xl px-6 text-sm font-black font-mono outline-none focus:ring-2 ring-primary/20 transition-all"
-                           placeholder="XXXX-XXXX"
+                           value={formData.capacity}
+                           onChange={(e) => setFormData({...formData, capacity: parseInt(e.target.value)})}
+                           className="w-full h-16 bg-slate-50 rounded-2xl px-6 text-sm font-black outline-none focus:ring-2 ring-primary/20 transition-all"
+                           placeholder="40"
                         />
                      </div>
+                  </div>
+
+                  <div className="space-y-2">
+                     <label className="text-[9px] font-black uppercase tracking-widest text-foreground/30 px-2">Hardware Device ID</label>
+                     <input 
+                        required
+                        value={formData.gpsDeviceId}
+                        onChange={(e) => setFormData({...formData, gpsDeviceId: e.target.value})}
+                        className="w-full h-16 bg-slate-50 rounded-2xl px-6 text-sm font-black font-mono outline-none focus:ring-2 ring-primary/20 transition-all"
+                        placeholder="XXXX-XXXX"
+                     />
                   </div>
 
                   <div className="pt-6 flex gap-4">
@@ -297,7 +397,7 @@ const BusManagement = () => {
                        disabled={submitting}
                        className="flex-[2] !h-20 !rounded-3xl !text-sm !font-black !uppercase tracking-widest !bg-primary shadow-2xl shadow-primary/20 hover:scale-[1.02] transition-all"
                      >
-                       {submitting ? 'Registering Asset...' : 'Authorize Asset'}
+                       {submitting ? 'Processing Asset...' : isEditing ? 'Update Asset' : 'Authorize Asset'}
                        <Save size={20} />
                      </Button>
                   </div>

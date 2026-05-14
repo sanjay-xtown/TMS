@@ -16,6 +16,8 @@ const initModels = () => {
   // Student - Bus Transfer Logs (One to Many)
   Student.hasMany(BusTransferLog, { foreignKey: 'studentId', as: 'transferLogs' });
   BusTransferLog.belongsTo(Student, { foreignKey: 'studentId', as: 'student' });
+  BusTransferLog.belongsTo(Bus, { foreignKey: 'oldBusId', as: 'oldBus' });
+  BusTransferLog.belongsTo(Bus, { foreignKey: 'newBusId', as: 'newBus' });
 
   // School - Bus (One to Many)
   School.hasMany(Bus, { foreignKey: 'schoolId', as: 'buses' });

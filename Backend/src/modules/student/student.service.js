@@ -1,5 +1,4 @@
-import Student from './student.model.js';
-import Parent from '../parent/parent.model.js';
+import { Parent, Student, School, Bus } from '../../models/initModels.js';
 import { hashPassword } from '../../shared/auth/bcrypt.js';
 import { AppError } from '../../shared/errorHandling/errorHandler.js';
 import { Op } from 'sequelize';
@@ -69,8 +68,23 @@ export const deleteStudent = async (id) => {
   if (!student) {
     throw new AppError('Student not found', 404);
   }
+
+  const parentId = student.parentId;
+
+  // Destroy the student
   await student.destroy();
-  return { message: 'Student deleted successfully' };
+
+  // If a parentId exists, check if they have other students
+  if (parentId) {
+    const otherStudentsCount = await Student.count({ where: { parentId } });
+    if (otherStudentsCount === 0) {
+      // No other students linked, safe to clean up the parent record
+      await Parent.destroy({ where: { id: parentId } });
+      console.log(`[CLEANUP] Parent ${parentId} removed as they have no remaining students.`);
+    }
+  }
+
+  return { message: 'Student and orphaned parent (if any) deleted successfully' };
 };
 
 export const getStudents = async (filters = {}) => {
@@ -86,4 +100,21 @@ export const assignBus = async (studentId, busId) => {
     throw new AppError('Student not found', 404);
   }
   return await student.update({ currentBusId: busId });
+};
+
+export const updateStudentPhoto = async (id, photoUrl) => {
+  const student = await Student.findByPk(id);
+  if (!student) throw new Error('Student not found');
+  student.profilePhoto = photoUrl;
+  await student.save();
+  return student;
+};
+
+export const getStudentById = async (id) => {
+  return await Student.findByPk(id, {
+    include: [
+      { model: Parent, as: 'parent', attributes: ['parentName', 'phone', 'email'] },
+      { model: Bus, as: 'bus', attributes: ['busNumber', 'busRegisterNumber', 'routeName'] }
+    ]
+  });
 };

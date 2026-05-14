@@ -31,6 +31,10 @@ export const School = sequelize.define("School", {
     type: DataTypes.INTEGER,
     allowNull: false,
   },
+  status: {
+    type: DataTypes.ENUM('active', 'blocked'),
+    defaultValue: 'active',
+  },
 }, {
   tableName: 'schools',
   timestamps: true,

@@ -162,7 +162,7 @@ const LiveTracking = () => {
             {loading && buses.length === 0 ? (
               <div className="py-20 text-center">
                 <div className="w-10 h-10 border-4 border-primary/20 border-t-primary rounded-full animate-spin mx-auto mb-6" />
-                <p className="text-[10px] font-black uppercase tracking-[0.3em] text-foreground/20">Syncing Cloud Fleet...</p>
+                <p className="text-[10px] font-black uppercase tracking-[0.4em] text-foreground/20">Syncing Cloud Fleet...</p>
               </div>
             ) : filteredBuses.length === 0 ? (
               <div className="py-20 text-center">
@@ -262,53 +262,63 @@ const LiveTracking = () => {
                exit={{ y: 50, opacity: 0 }}
                className="absolute bottom-8 inset-x-8 z-[1000] pointer-events-none"
              >
-               <div className="bg-white/90 backdrop-blur-xl border border-white shadow-2xl rounded-[2.5rem] p-8 pointer-events-auto flex flex-col md:flex-row gap-10 items-center justify-between relative overflow-hidden">
+               <div className="bg-white/95 backdrop-blur-2xl border border-white shadow-2xl rounded-[2.5rem] p-6 pointer-events-auto flex items-center justify-between relative overflow-hidden gap-6">
                   <div className="absolute top-0 right-0 w-64 h-64 bg-primary/5 rounded-full -mr-32 -mt-32" />
                   
-                  <div className="flex items-center gap-8 relative z-10">
-                     <div className="w-24 h-24 bg-primary rounded-[2rem] flex items-center justify-center text-white shadow-2xl shadow-primary/30 relative">
-                        <Bus size={48} />
-                        <div className="absolute -bottom-2 -right-2 w-8 h-8 bg-success rounded-2xl border-4 border-white flex items-center justify-center shadow-lg">
-                           <div className="w-2.5 h-2.5 bg-white rounded-full animate-pulse" />
+                  {/* Left Side: Bus Profile */}
+                  <div className="flex items-center gap-5 shrink-0 relative z-10">
+                     <div className="w-16 h-16 bg-primary rounded-2xl flex items-center justify-center text-white shadow-xl shadow-primary/20 relative">
+                        <Bus size={32} />
+                        <div className="absolute -bottom-1 -right-1 w-6 h-6 bg-success rounded-full border-4 border-white flex items-center justify-center">
+                           <div className="w-1.5 h-1.5 bg-white rounded-full animate-pulse" />
                         </div>
                      </div>
-                     <div className="space-y-2">
-                         <div className="flex items-center gap-4">
-                            <h3 className="text-4xl font-black uppercase tracking-tighter text-foreground leading-none">Bus {selectedBus.busNumber}</h3>
-                            <Badge variant="success" className="!px-4 !py-1.5 !rounded-xl text-[10px] uppercase font-black tracking-widest shadow-xl shadow-success/10">{selectedBus.trackingStatus || 'Active'}</Badge>
-                         </div>
-                         <p className="text-xs font-bold text-foreground/30 uppercase tracking-[0.3em] flex items-center gap-2">
-                           <MapPin size={12} className="text-primary" />
-                           {selectedBus.driverName || 'Commander Alpha'} • Transit Captain
-                         </p>
+                     <div className="space-y-0.5">
+                          <div className="flex items-center gap-3">
+                             <h3 className="text-2xl font-black uppercase tracking-tighter text-foreground leading-none">Bus {selectedBus.busNumber}</h3>
+                             <Badge variant="success" className="!px-2 !py-0.5 !rounded-lg text-[8px] uppercase font-black tracking-widest">{selectedBus.trackingStatus || 'Active'}</Badge>
+                          </div>
+                          <p className="text-[9px] font-bold text-foreground/30 uppercase tracking-widest">{selectedBus.driverName || 'Captain'}</p>
                      </div>
                   </div>
 
-                  <div className="flex-1 grid grid-cols-3 gap-10 px-12 border-x border-slate-100 h-20 items-center relative z-10">
-                     <div className="text-center">
-                        <p className="text-[10px] font-black uppercase tracking-widest text-foreground/20 mb-2">Live Velocity</p>
-                        <p className="text-2xl font-black text-primary">{selectedBus.speed || '0'} <span className="text-xs opacity-30">KM/H</span></p>
+                  {/* Middle: Telemetry Data */}
+                  <div className="flex-1 flex items-center justify-between px-8 border-x border-slate-100 min-w-0 relative z-10 gap-4">
+                     <div className="text-center min-w-0">
+                        <p className="text-[8px] font-black uppercase tracking-widest text-foreground/20 mb-1">Velocity</p>
+                        <p className="text-xl font-black text-primary truncate leading-none">
+                          {selectedBus.speed || '0'} 
+                          <span className="text-[9px] opacity-30 ml-0.5 font-bold">KM/H</span>
+                        </p>
                      </div>
-                     <div className="text-center">
-                        <p className="text-[10px] font-black uppercase tracking-widest text-foreground/20 mb-2">Registry</p>
-                        <p className="text-2xl font-black text-foreground">{selectedBus.busRegisterNumber?.slice(-4) || 'XXXX'}</p>
+                     <div className="w-px h-8 bg-slate-50" />
+                     <div className="text-center min-w-0">
+                        <p className="text-[8px] font-black uppercase tracking-widest text-foreground/20 mb-1">Registry</p>
+                        <p className="text-xl font-black text-foreground truncate leading-none">{selectedBus.busRegisterNumber?.slice(-4) || 'XXXX'}</p>
                      </div>
-                     <div className="text-center">
-                        <p className="text-[10px] font-black uppercase tracking-widest text-foreground/20 mb-2">Signal Strength</p>
-                        <p className="text-2xl font-black text-success">EXCELLENT</p>
+                     <div className="w-px h-8 bg-slate-50" />
+                     <div className="text-center min-w-0">
+                        <p className="text-[8px] font-black uppercase tracking-widest text-foreground/20 mb-1">Signal Status</p>
+                        <div className="flex items-center justify-center gap-1">
+                           <div className="w-1 h-3 bg-success rounded-full" />
+                           <div className="w-1 h-4 bg-success rounded-full" />
+                           <div className="w-1 h-5 bg-success rounded-full" />
+                           <span className="text-[9px] font-black text-success ml-1 uppercase">EXCELLENT</span>
+                        </div>
                      </div>
                   </div>
 
-                  <div className="flex items-center gap-4 relative z-10">
-                     <Button className="!rounded-[1.5rem] h-20 !px-10 !bg-primary shadow-2xl shadow-primary/20 hover:scale-105 transition-all !text-sm !font-black !uppercase tracking-widest">
-                        <Phone size={20} />
+                  {/* Right Side: Actions */}
+                  <div className="flex items-center gap-3 shrink-0 relative z-10">
+                     <Button className="!rounded-2xl h-16 !px-8 !bg-primary shadow-xl shadow-primary/10 hover:scale-[1.02] transition-all !text-[10px] !font-black !uppercase tracking-widest flex items-center gap-3">
+                        <Phone size={16} />
                         Contact Driver
                      </Button>
                      <button 
                        onClick={() => setSelectedBus(null)}
-                       className="w-20 h-20 bg-slate-50 rounded-[1.5rem] flex items-center justify-center text-foreground/20 hover:text-error hover:bg-error/10 transition-all shadow-inner"
+                       className="w-16 h-16 bg-slate-50 rounded-2xl flex items-center justify-center text-foreground/20 hover:text-error hover:bg-error/5 transition-all shadow-sm"
                      >
-                        <X size={28} />
+                        <X size={24} />
                      </button>
                   </div>
                </div>

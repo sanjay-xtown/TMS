@@ -1,8 +1,20 @@
 import BusTransferLog from './transfer.model.js';
 import Student from '../student/student.model.js';
 import BusLiveLocation from '../tracking/tracking.model.js';
+import { Bus } from '../bus/bus.model.js';
 import { AppError } from '../../shared/errorHandling/errorHandler.js';
 import sequelize from '../../config/db.js';
+
+export const getAllTransfers = async () => {
+  return await BusTransferLog.findAll({
+    include: [
+      { model: Student, as: 'student', attributes: ['id', 'studentName', 'rollNo'] },
+      { model: Bus, as: 'oldBus', attributes: ['id', 'busNumber', 'busRegisterNumber'] },
+      { model: Bus, as: 'newBus', attributes: ['id', 'busNumber', 'busRegisterNumber'] }
+    ],
+    order: [['createdAt', 'DESC']]
+  });
+};
 
 /**
  * Transfer a single student to a new bus permanently

@@ -64,6 +64,7 @@ export default function SchoolAdminDashboard() {
   }, [view]);
 
   return (
+<<<<<<< HEAD
     <div className="schooladmin-page">
       {/* SIDEBAR */}
       <aside className="schooladmin-sidebar">
@@ -72,6 +73,13 @@ export default function SchoolAdminDashboard() {
           <div className="schooladmin-sidebar-title">
             School<span className="schooladmin-sidebar-title-accent">Admin</span>
           </div>
+=======
+    <div className="space-y-10">
+      <header className="flex flex-col md:flex-row md:items-center justify-between gap-6">
+        <div>
+          <h1 className="text-4xl font-black tracking-tighter text-foreground uppercase">School Bus Dashboard</h1>
+          <p className="text-sm font-bold text-foreground/40 uppercase tracking-[0.3em] mt-1">{user?.name || 'School Admin'} • Admin Control</p>
+>>>>>>> df6ca18 (completed Parent Ui design and Super admin school page merge the admin field)
         </div>
 
         <div className="schooladmin-sidebar-menu">
@@ -83,6 +91,7 @@ export default function SchoolAdminDashboard() {
           <NavItem active={view === "live"} onClick={() => setView("live")} icon={<MapPin size={18} />} label="Live Tracking" />
         </div>
 
+<<<<<<< HEAD
         <button
           onClick={() => {
             localStorage.clear();
@@ -179,12 +188,101 @@ export default function SchoolAdminDashboard() {
                 </tbody>
               </table>
             </div>
+=======
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+        {[
+          { label: 'Total Students', value: loading ? '...' : stats.totalStudents, icon: Users, color: 'text-blue-500' },
+          { label: 'Total Buses', value: loading ? '...' : stats.busFleet, icon: Bus, color: 'text-primary' },
+          { label: 'Buses on Road', value: loading ? '...' : stats.activeTrips, icon: Navigation, color: 'text-purple-500' },
+          { label: 'New Alerts', value: '0', icon: AlertTriangle, color: 'text-success' },
+        ].map((stat, i) => (
+          <Card key={i} className="p-6 relative group cursor-pointer hover:border-primary/20 transition-all">
+             <div className="flex justify-between items-start mb-4">
+               <div className={`p-3 rounded-xl bg-foreground/[0.03] ${stat.color}`}>
+                 <stat.icon size={24} />
+               </div>
+               <Badge variant="outline">Live</Badge>
+             </div>
+             <p className="text-[10px] font-black uppercase tracking-widest text-foreground/40 mb-1">{stat.label}</p>
+             <h4 className="text-2xl font-black">{stat.value}</h4>
+          </Card>
+        ))}
+      </div>
+
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+        {/* Live Map Preview Placeholder */}
+        <Card className="!p-0 h-[500px] relative overflow-hidden group">
+          <div className="absolute inset-0 bg-foreground/5 animate-pulse" />
+          {/* Mock Map UI */}
+          <div className="absolute inset-0 flex items-center justify-center">
+            <div className="text-center space-y-4">
+              <div className="w-20 h-20 bg-primary/20 rounded-full flex items-center justify-center mx-auto">
+                <MapPin size={40} className="text-primary animate-bounce" />
+              </div>
+              <div>
+                <p className="text-sm font-black uppercase tracking-widest">Live Bus Tracking</p>
+                <p className="text-[10px] font-bold text-foreground/40 uppercase tracking-widest mt-2">8 Buses currently on active routes</p>
+              </div>
+              <Button onClick={() => window.location.href='/schooladmin/tracking'} className="!rounded-xl h-12 !px-8">View Live Map</Button>
+            </div>
+          </div>
+          <div className="absolute top-6 left-6 z-10 glass p-4 rounded-2xl border border-border">
+             <div className="flex items-center gap-3">
+                <div className="w-3 h-3 bg-success rounded-full pulse-live" />
+                <span className="text-[10px] font-black uppercase tracking-widest">All Systems Normal</span>
+             </div>
+>>>>>>> df6ca18 (completed Parent Ui design and Super admin school page merge the admin field)
           </div>
         )}
 
+<<<<<<< HEAD
         {/* BOTTOM WIDGET: LIVE BUS TRACKING SECTION */}
         <div className="schooladmin-live-section">
           <BusMapWidget />
+=======
+        {/* Recent Notifications & Alerts */}
+        <div className="space-y-6">
+          <Card className="p-8 space-y-6">
+            <div className="flex justify-between items-center">
+               <h3 className="text-xl font-black uppercase tracking-tight">Recent Alerts</h3>
+               <button className="text-primary text-[10px] font-black uppercase tracking-widest">Mark All Read</button>
+            </div>
+            <div className="space-y-4">
+               {[
+                 { title: 'Bus T-08 Delay', desc: 'Heavy traffic at Race Course junction. Delayed by 15 mins.', time: '5m ago', color: 'bg-warning' },
+                 { title: 'Bus Change', desc: 'Student transfer from T-02 to T-15 completed.', time: '12m ago', color: 'bg-primary' },
+                 { title: 'Emergency Alert', desc: 'No active emergencies recorded.', time: 'Stable', color: 'bg-success' },
+               ].map((alert, i) => (
+                 <div key={i} className="flex gap-4 p-4 rounded-2xl bg-foreground/[0.03] border border-border group hover:bg-foreground/[0.05] transition-all">
+                    <div className={`w-1.5 rounded-full ${alert.color}`} />
+                    <div className="flex-1">
+                       <div className="flex justify-between items-center mb-1">
+                          <p className="text-xs font-black uppercase tracking-tight">{alert.title}</p>
+                          <span className="text-[9px] font-bold text-foreground/30 uppercase">{alert.time}</span>
+                       </div>
+                       <p className="text-[11px] font-bold text-foreground/60 leading-relaxed uppercase">{alert.desc}</p>
+                    </div>
+                 </div>
+               ))}
+            </div>
+          </Card>
+
+          <Card className="p-8 bg-primary text-white overflow-hidden relative group cursor-pointer">
+             <div className="absolute right-[-10%] bottom-[-10%] opacity-10 rotate-12 transition-transform duration-700 group-hover:scale-110">
+                <Navigation size={200} />
+             </div>
+             <div className="relative z-10 space-y-6">
+                <div>
+                   <h4 className="text-2xl font-black uppercase tracking-tighter">Emergency Alert</h4>
+                   <p className="text-[11px] font-bold text-white/60 uppercase tracking-widest mt-2">Send instant alerts to parents and drivers</p>
+                </div>
+                <Button variant="secondary" className="!bg-white !text-primary !rounded-xl !px-10 h-14">
+                   Send Alert
+                   <ArrowRight size={18} />
+                </Button>
+             </div>
+          </Card>
+>>>>>>> df6ca18 (completed Parent Ui design and Super admin school page merge the admin field)
         </div>
 
         {/* Optional: keep a simple placeholder for live view; widget is always at bottom */}

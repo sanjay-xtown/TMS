@@ -40,6 +40,9 @@ export const sendOnboardingEmail = async (parent, student, schoolName, rawPasswo
     subject: `🎒 Welcome to ${schoolName} - School Bus Tracking Login Details`,
     html: `
       <div style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 40px; color: #333;">
+        ${(() => {
+          const baseUrl = (process.env.FRONTEND_URL || 'http://localhost:5173').replace(/\/$/, '');
+          return `
         <h1 style="color: #88B04B; font-size: 24px; font-weight: 800; line-height: 1.3; text-transform: uppercase; margin-bottom: 25px;">
           WELCOME TO ${schoolName}
         </h1>
@@ -69,13 +72,15 @@ export const sendOnboardingEmail = async (parent, student, schoolName, rawPasswo
         </p>
         
         <div style="display: flex; gap: 15px; margin-bottom: 40px;">
-          <a href="${process.env.FRONTEND_URL}/login" style="display: inline-block; background-color: #88B04B; color: white; padding: 16px 32px; text-decoration: none; border-radius: 12px; font-weight: bold; font-size: 16px;">
+          <a href="${baseUrl}/login" style="display: inline-block; background-color: #88B04B; color: white; padding: 16px 32px; text-decoration: none; border-radius: 12px; font-weight: bold; font-size: 16px;">
             Login to Dashboard
           </a>
-          <a href="${process.env.FRONTEND_URL}/download" style="display: inline-block; background-color: #262626; color: white; padding: 16px 32px; text-decoration: none; border-radius: 12px; font-weight: bold; font-size: 16px;">
+          <a href="${baseUrl}/download" style="display: inline-block; background-color: #262626; color: white; padding: 16px 32px; text-decoration: none; border-radius: 12px; font-weight: bold; font-size: 16px;">
             Download App
           </a>
         </div>
+        `;
+        })()}
         
         <hr style="border: 0; border-top: 1px solid #EEE; margin-bottom: 20px;">
         <p style="font-size: 12px; color: #999; line-height: 1.5;">

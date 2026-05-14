@@ -22,11 +22,25 @@ let messaging = null;
 const initMessaging = async () => {
   try {
     const supported = await isSupported();
-    if (supported) {
+    if (supported && 'serviceWorker' in navigator) {
+      // Manually register service worker with config as query params to avoid hardcoding in public/
+      const configParams = new URLSearchParams({
+        apiKey: firebaseConfig.apiKey,
+        authDomain: firebaseConfig.authDomain,
+        projectId: firebaseConfig.projectId,
+        storageBucket: firebaseConfig.storageBucket,
+        messagingSenderId: firebaseConfig.messagingSenderId,
+        appId: firebaseConfig.appId
+      }).toString();
+
+      const registration = await navigator.serviceWorker.register(
+        `/firebase-messaging-sw.js?${configParams}`
+      );
+      
       messaging = getMessaging(app);
       return messaging;
     }
-    console.warn('[Firebase] Messaging not supported in this environment (likely due to insecure origin/IP).');
+    console.warn('[Firebase] Messaging not supported or SW unavailable.');
     return null;
   } catch (err) {
     console.error('[Firebase] Failed to check messaging support:', err);

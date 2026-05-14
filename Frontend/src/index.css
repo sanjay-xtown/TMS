@@ -68,9 +68,38 @@
   }
 }
 
+<<<<<<< HEAD
 /* Bottom Navigation Styling */
 .bottom-nav-item {
   @apply flex flex-col items-center justify-center gap-1 transition-all duration-300;
+=======
+/* Maintain compatibility with Parent PWA */
+.matte-green-theme {
+  --color-background: #F2EDC5;
+  --color-foreground: #313131;
+  --color-primary: #88B04B;
+  background-color: var(--color-background);
+  color: var(--color-foreground);
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+.dark .matte-green-theme {
+  --color-background: #0A1A12;
+  --color-foreground: #F5F5F5;
+  --color-card: rgba(255, 255, 255, 0.04);
+  --color-border: rgba(255, 255, 255, 0.08);
+  --color-muted-foreground: rgba(255, 255, 255, 0.45);
+}
+
+.premium-card {
+  background: var(--color-card);
+  backdrop-filter: blur(24px);
+  -webkit-backdrop-filter: blur(24px);
+  border: 1px solid var(--color-border);
+  border-radius: 32px;
+  padding: 1.5rem;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+>>>>>>> df6ca18 (completed Parent Ui design and Super admin school page merge the admin field)
 }
 
 .bottom-nav-item.active {

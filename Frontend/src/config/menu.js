@@ -18,7 +18,6 @@ import { ROUTES } from './routes';
 export const SUPERADMIN_MENU = [
   { label: 'Dashboard', path: ROUTES.SUPERADMIN_DASHBOARD, icon: LayoutDashboard },
   { label: 'Schools', path: ROUTES.SCHOOL_MANAGEMENT, icon: School },
-  { label: 'Admins', path: ROUTES.ADMIN_MANAGEMENT, icon: Users },
   { label: 'Reports', path: ROUTES.REPORTS_ANALYTICS, icon: BarChart3 },
   { label: 'Settings', path: ROUTES.PLATFORM_SETTINGS, icon: Settings },
 ];

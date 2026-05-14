@@ -30,10 +30,6 @@ const DriverManagement = () => {
           <h1 className="text-4xl font-black tracking-tighter text-foreground uppercase">Transit Captains</h1>
           <p className="text-sm font-bold text-foreground/40 uppercase tracking-[0.3em] mt-1">Driver Workforce & Certification Management</p>
         </div>
-        <Button className="!rounded-2xl h-14 !px-8 shadow-xl shadow-primary/20">
-          <Plus size={20} />
-          Register New Captain
-        </Button>
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-6">

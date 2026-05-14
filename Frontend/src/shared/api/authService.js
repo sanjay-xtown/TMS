@@ -16,6 +16,9 @@ export const parentLogin = async (mobileNumber, password) => {
 export const logout = () => {
   localStorage.removeItem('token');
   localStorage.removeItem('parent');
+  localStorage.removeItem('selectedChildId');
+  // Clear any other potentially stale items
+  sessionStorage.clear();
 };
 
 export const getStoredParent = () => {

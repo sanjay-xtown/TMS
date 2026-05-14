@@ -6,6 +6,7 @@ const router = express.Router();
 
 router.use(authMiddleware);
 
+router.get('/', transferController.getTransfers);
 router.post('/student', transferController.transferStudent);
 router.post('/emergency', transferController.emergencyTransfer);
 

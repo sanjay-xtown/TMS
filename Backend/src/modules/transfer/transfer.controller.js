@@ -1,6 +1,18 @@
 import * as transferService from './transfer.service.js';
 import { transferStudentSchema, emergencyTransferSchema } from './transfer.schema.js';
 
+export const getTransfers = async (req, res, next) => {
+  try {
+    const transfers = await transferService.getAllTransfers();
+    res.status(200).json({
+      status: 'success',
+      data: transfers,
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
 export const transferStudent = async (req, res, next) => {
   try {
     const validatedData = transferStudentSchema.parse(req.body);

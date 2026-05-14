@@ -43,3 +43,17 @@ export const getMySchool = async (req, res) => {
         res.status(500).json({ success: false, message: error.message });
     }
 };
+export const toggleSchoolStatus = async (req, res, next) => {
+  try {
+    const { status } = req.body;
+    const school = await schoolService.updateSchoolStatus(req.params.id, status);
+
+    res.status(200).json({
+      status: 'success',
+      message: `School ${status === 'blocked' ? 'blocked' : 'unblocked'} successfully`,
+      data: school,
+    });
+  } catch (error) {
+    next(error);
+  }
+};

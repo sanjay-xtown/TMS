@@ -1,17 +1,18 @@
 importScripts('https://www.gstatic.com/firebasejs/10.7.0/firebase-app-compat.js');
 importScripts('https://www.gstatic.com/firebasejs/10.7.0/firebase-messaging-compat.js');
 
-// These values are required for the background service worker
-// They can be hardcoded here or passed via query params if using a build step
-// For simplicity in a PWA, we usually hardcode the essential IDs
-firebase.initializeApp({
-  apiKey: "AIzaSyDs66mEFn8YFh_7MU9j-yDJGXUsUpyoe2Q",
-  authDomain: "sbt-xtown.firebaseapp.com",
-  projectId: "sbt-xtown",
-  storageBucket: "sbt-xtown.firebasestorage.app",
-  messagingSenderId: "111341194960",
-  appId: "1:111341194960:web:1100952df465b4b483d8d5"
-});
+// Extract config from query params
+const urlParams = new URLSearchParams(self.location.search);
+const firebaseConfig = {
+  apiKey: urlParams.get('apiKey'),
+  authDomain: urlParams.get('authDomain'),
+  projectId: urlParams.get('projectId'),
+  storageBucket: urlParams.get('storageBucket'),
+  messagingSenderId: urlParams.get('messagingSenderId'),
+  appId: urlParams.get('appId')
+};
+
+firebase.initializeApp(firebaseConfig);
 
 const messaging = firebase.messaging();
 

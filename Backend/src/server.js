@@ -1,38 +1,32 @@
-import app from './app.js';
-import sequelize from './config/db.js';
+import dotenv from 'dotenv';
+dotenv.config();
+import app from "./app.js";
+import { connectDB, sequelize } from "./config/db.js";
+import { initModels } from "./models/initModels.js";
 
 const PORT = process.env.PORT || 5000;
 
-sequelize.sync({ alter: true }).then(async () => {
-  console.log('✅ Database Synchronized');
-  
-  // Auto-seed SuperAdmin if not exists
-  const { SuperAdmin } = await import('./modules/superadmin/superadmin.model.js');
-  const adminExists = await SuperAdmin.findOne({ where: { email: 'admin@example.com' } });
-  if (!adminExists) {
-    await SuperAdmin.create({
-      username: 'admin',
-      email: 'admin@example.com',
-      password: 'password123'
-    });
-    console.log('👤 Default SuperAdmin created: admin@example.com / password123');
-  }
+const startServer = async () => {
+  try {
+    await connectDB();
+    initModels();
+    
+    // Attempt database synchronization
+    await sequelize.sync();
+    console.log("✅ Database synced successfully");
 
-  // Auto-seed SchoolAdmin if not exists
-  const { User } = await import('./modules/user/user.model.js');
-  const schoolAdminExists = await User.findOne({ where: { email: 'admin@gmail.com' } });
-  if (!schoolAdminExists) {
-    await User.create({
-      email: 'admin@gmail.com',
-      password: 'admin123',
-      role: 'schooladmin'
+    app.listen(PORT, () => {
+      const startupLog = `[${new Date().toISOString()}] 🚀 Server running on port ${PORT}\n`;
+      console.log(startupLog);
+      import('fs').then(fs => {
+        fs.appendFileSync('startup.log', startupLog);
+      });
+      console.log(`✅ PostgreSQL connected successfully`);
     });
-    console.log('👤 Default SchoolAdmin created: admin@gmail.com / admin123');
+  } catch (error) {
+    console.error("❌ Failed to start server:", error.message);
+    process.exit(1);
   }
+};
 
-  app.listen(PORT, () => {
-    console.log(`🚀 Server running on port ${PORT}`);
-  });
-}).catch(err => {
-  console.error('❌ Database Sync Failed:', err);
-});
+startServer();
