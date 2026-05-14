@@ -1,4 +1,5 @@
 import Admin from './admin.model.js';
+import { School } from '../school/school.model.js';
 import { hashPassword, comparePassword } from '../../shared/auth/bcrypt.js';
 import { generateToken } from '../../shared/auth/jwt.js';
 import { AppError } from '../../shared/errorHandling/errorHandler.js';
@@ -35,4 +36,17 @@ export const registerAdmin = async (adminData) => {
 
   const { password: _, ...adminResult } = admin.toJSON();
   return adminResult;
+};
+
+export const getAllAdmins = async () => {
+  return await Admin.findAll({
+    attributes: { exclude: ['password'] },
+    include: [
+      {
+        model: School,
+        as: 'school',
+        attributes: ['schoolName']
+      }
+    ]
+  });
 };

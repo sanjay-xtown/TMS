@@ -39,12 +39,33 @@ export const Bus = sequelize.define("Bus", {
   },
   gpsDeviceId: {
     type: DataTypes.STRING,
-    allowNull: false,
+    allowNull: true,
     unique: true,
+  },
+  gpsProvider: {
+    type: DataTypes.ENUM("TRACCAR", "SIMULATED"),
+    defaultValue: "SIMULATED",
+  },
+  deviceIdentifier: {
+    type: DataTypes.STRING,
+    allowNull: true,
+    unique: true,
+  },
+  trackingStatus: {
+    type: DataTypes.ENUM("ACTIVE", "OFFLINE", "INACTIVE", "SCHOOL_HOURS_ONLY"),
+    defaultValue: "INACTIVE",
   },
   status: {
     type: DataTypes.ENUM("ACTIVE", "INACTIVE"),
     defaultValue: "ACTIVE",
+  },
+  morningStartTime: {
+    type: DataTypes.STRING, // Store as "07:30" or similar
+    allowNull: true,
+  },
+  eveningStartTime: {
+    type: DataTypes.STRING,
+    allowNull: true,
   },
 }, {
   tableName: 'buses',

@@ -17,8 +17,7 @@ const BusLiveLocation = sequelize.define('BusLiveLocation', {
   },
   gpsDeviceId: {
     type: DataTypes.STRING,
-    allowNull: false,
-    unique: true,
+    allowNull: true,
   },
   latitude: {
     type: DataTypes.DOUBLE,

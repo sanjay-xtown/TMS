@@ -7,6 +7,8 @@ const router = express.Router();
 
 router.get('/test', (req, res) => res.json({ message: 'Dashboard route is working' }));
 router.get('/', authMiddleware, roleMiddleware('parent'), dashboardController.getDashboard);
+router.get('/superadmin', authMiddleware, roleMiddleware('superadmin'), dashboardController.getSuperAdminStats);
+router.get('/school-admin', authMiddleware, roleMiddleware('school_admin'), dashboardController.getSchoolAdminStats);
 
 
 export default router;

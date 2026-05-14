@@ -8,30 +8,38 @@ export default {
     extend: {
       colors: {
         primary: {
-          DEFAULT: "#FACC15",
-          foreground: "#000000",
+          DEFAULT: "var(--primary)",
+          foreground: "var(--primary-foreground)",
         },
-        background: "#000000",
-        foreground: "#FFFFFF",
+        background: "var(--background)",
+        foreground: "var(--foreground)",
         card: {
-          DEFAULT: "#111111",
-          foreground: "#FFFFFF",
+          DEFAULT: "var(--card)",
+          foreground: "var(--card-foreground)",
         },
         muted: {
-          DEFAULT: "#1F1F1F",
-          foreground: "#9CA3AF",
+          DEFAULT: "var(--muted)",
+          foreground: "var(--muted-foreground)",
         },
         accent: {
-          DEFAULT: "#FACC15",
-          foreground: "#000000",
+          DEFAULT: "var(--accent)",
+          foreground: "var(--accent-foreground)",
         },
-        border: "#262626",
+        border: "var(--border)",
+        input: "var(--input)",
+        ring: "var(--ring)",
+        warning: "#F59E0B",
+        error: "#EF4444",
+        success: "#88B04B",
       },
       borderRadius: {
-        lg: "var(--radius)",
-        md: "calc(var(--radius) - 2px)",
-        sm: "calc(var(--radius) - 4px)",
+        xl: "1rem",
+        '2xl': "1.5rem",
+        '3xl': "2rem",
       },
+      backdropBlur: {
+        xs: '2px',
+      }
     },
   },
   plugins: [],

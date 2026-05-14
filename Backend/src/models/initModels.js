@@ -28,6 +28,14 @@ const initModels = () => {
   // Bus - BusLiveLocation (One to One)
   Bus.hasOne(BusLiveLocation, { foreignKey: 'busId', as: 'liveLocation' });
   BusLiveLocation.belongsTo(Bus, { foreignKey: 'busId', as: 'bus' });
+
+  // Student - Bus (Many to One)
+  Student.belongsTo(Bus, { foreignKey: 'currentBusId', as: 'bus' });
+  Bus.hasMany(Student, { foreignKey: 'currentBusId', as: 'students' });
+
+  // School - Admin (One to Many)
+  School.hasMany(Admin, { foreignKey: 'schoolId', as: 'admins' });
+  Admin.belongsTo(School, { foreignKey: 'schoolId', as: 'school' });
 };
 
 export { Parent, Student, BusLiveLocation, BusTransferLog, Admin, Bus, School, User, BusStatus, BusLog, initModels };

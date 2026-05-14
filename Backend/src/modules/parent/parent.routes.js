@@ -38,4 +38,18 @@ router.patch('/profile', authMiddleware, parentController.updateProfile);
  */
 router.patch('/:id', authMiddleware, roleMiddleware('superadmin', 'school_admin'), parentController.adminUpdateParent);
 
+/**
+ * @route   PATCH /api/parents/fcm-token
+ * @desc    Update parent's FCM token for push notifications
+ * @access  Private (Parent)
+ */
+router.patch('/fcm-token', authMiddleware, parentController.updateFcmToken);
+
+/**
+ * @route   GET /api/parents
+ * @desc    Get all parents (Admin)
+ * @access  Private (Admin)
+ */
+router.get('/', authMiddleware, roleMiddleware('superadmin', 'school_admin'), parentController.getAllParents);
+
 export default router;

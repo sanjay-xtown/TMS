@@ -19,55 +19,56 @@ const SplashScreen = () => {
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
-      className="h-screen bg-black flex flex-col items-center justify-center relative overflow-hidden"
+      className="matte-green-theme h-screen bg-background flex flex-col items-center justify-center relative overflow-hidden"
     >
       {/* Background Decor */}
-      <div className="absolute top-[-10%] right-[-10%] w-64 h-64 bg-primary/10 rounded-full blur-3xl" />
-      <div className="absolute bottom-[-10%] left-[-10%] w-64 h-64 bg-primary/10 rounded-full blur-3xl" />
+      <div className="absolute top-[-5%] right-[-5%] w-64 h-64 bg-primary/5 rounded-full blur-3xl" />
+      <div className="absolute bottom-[-5%] left-[-5%] w-64 h-64 bg-accent/10 rounded-full blur-3xl" />
 
       {/* Logo Container */}
       <motion.div
-        initial={{ scale: 0.5, opacity: 0 }}
+        initial={{ scale: 0.8, opacity: 0 }}
         animate={{ scale: 1, opacity: 1 }}
-        transition={{ duration: 1, ease: "easeOut" }}
-        className="flex flex-col items-center gap-6"
+        transition={{ duration: 0.8, ease: "easeOut" }}
+        className="flex flex-col items-center gap-8"
       >
-        <div className="w-24 h-24 bg-primary rounded-[28px] flex items-center justify-center shadow-[0_0_50px_rgba(250,204,21,0.3)]">
-          <Bus size={48} color="black" strokeWidth={2.5} />
+        <div className="w-28 h-28 bg-primary rounded-[40px] flex items-center justify-center shadow-sm relative group">
+          <div className="absolute inset-0 bg-white/10 rounded-[40px] scale-110 blur-xl opacity-0 group-hover:opacity-100 transition-opacity" />
+          <Bus size={56} className="text-white" strokeWidth={2} />
         </div>
         
         <div className="text-center">
           <motion.h1 
             initial={{ y: 20, opacity: 0 }}
             animate={{ y: 0, opacity: 1 }}
-            transition={{ delay: 0.5 }}
-            className="text-white text-3xl font-black tracking-tighter"
+            transition={{ delay: 0.3 }}
+            className="text-foreground text-4xl font-extrabold tracking-tighter leading-none"
           >
-            SCHOOL BUS
+            TMS
           </motion.h1>
           <motion.p 
             initial={{ y: 10, opacity: 0 }}
             animate={{ y: 0, opacity: 1 }}
-            transition={{ delay: 0.7 }}
-            className="text-primary font-bold tracking-[0.3em] text-xs mt-1"
+            transition={{ delay: 0.5 }}
+            className="text-primary font-bold tracking-[0.4em] text-[10px] mt-4 opacity-60"
           >
-            TRACKING SYSTEM
+            STUDENT TRANSIT
           </motion.p>
         </div>
       </motion.div>
 
       {/* Loading Indicator */}
-      <div className="absolute bottom-16 w-32 h-1 bg-white/10 rounded-full overflow-hidden">
+      <div className="absolute bottom-24 w-40 h-1 bg-foreground/5 rounded-full overflow-hidden">
         <motion.div 
           initial={{ x: "-100%" }}
           animate={{ x: "100%" }}
-          transition={{ duration: 2, repeat: Infinity, ease: "linear" }}
-          className="w-full h-full bg-primary shadow-[0_0_10px_#FACC15]"
+          transition={{ duration: 1.5, repeat: Infinity, ease: "easeInOut" }}
+          className="w-full h-full bg-primary"
         />
       </div>
 
-      <p className="absolute bottom-8 text-gray-500 text-[10px] font-medium tracking-widest uppercase">
-        Premium Student Transport
+      <p className="absolute bottom-12 text-foreground/20 text-[9px] font-bold tracking-[0.3em] uppercase">
+        Premium Campus Safety
       </p>
     </motion.div>
   );

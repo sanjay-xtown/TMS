@@ -1,38 +1,83 @@
 @import "tailwindcss";
+@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&family=Inter:wght@300;400;500;600;700;800;900&display=swap');
 
 @theme {
-  --color-background: #000000;
-  --color-foreground: #ffffff;
-  --color-primary: #FACC15;
-  --color-card: #111111;
-  --color-muted: #1F1F1F;
-  --color-accent: #FACC15;
-  --color-border: #262626;
-  --radius-lg: 1.5rem;
-  --radius-md: 1rem;
-  --radius-sm: 0.5rem;
+  --color-background: #F8F9FA;
+  --color-foreground: #121416;
+  --color-primary: #88B04B;
+  --color-primary-foreground: #FFFFFF;
+  --color-card: rgba(255, 255, 255, 0.6);
+  --color-card-foreground: #121416;
+  --color-muted: #F1F5F9;
+  --color-muted-foreground: rgba(18, 22, 22, 0.4);
+  --color-accent: #88B04B;
+  --color-accent-foreground: #FFFFFF;
+  --color-border: rgba(18, 22, 22, 0.05);
+  --color-input: #FFFFFF;
+  --color-ring: #88B04B;
+  --color-warning: #F59E0B;
+  --color-error: #EF4444;
+  --color-success: #88B04B;
+  
+  --radius-xl: 1rem;
+  --radius-2xl: 1.5rem;
+  --radius-3xl: 2rem;
+}
+
+@layer base {
+  .dark {
+    --color-background: #121416;
+    --color-foreground: #FFFFFF;
+    --color-card: rgba(26, 28, 30, 0.7);
+    --color-card-foreground: #FFFFFF;
+    --color-muted: #1E293B;
+    --color-muted-foreground: #94A3B8;
+    --color-border: rgba(255, 255, 255, 0.05);
+    --color-input: #1E293B;
+  }
 }
 
 @layer base {
   * {
-    @apply border-border;
+    border-color: var(--color-border);
   }
   body {
-    @apply bg-background text-foreground antialiased overflow-x-hidden;
-    font-family: 'Inter', system-ui, -apple-system, sans-serif;
+    background-color: var(--color-background);
+    color: var(--color-foreground);
+    @apply antialiased;
+    font-family: 'Outfit', 'Inter', sans-serif;
   }
 }
 
-/* Custom Utilities for Premium Look */
 @layer utilities {
+  /* Define CSS variables for the glass effect to avoid @apply issues */
   .glass {
-    @apply bg-white/10 backdrop-blur-lg border border-white/10;
+    backdrop-filter: blur(32px);
+    -webkit-backdrop-filter: blur(32px);
+    border: 1px solid var(--color-border);
+    background: var(--color-card);
   }
-  
-  .safe-bottom {
-    padding-bottom: env(safe-area-inset-bottom);
+
+  .glass-card {
+    backdrop-filter: blur(32px);
+    -webkit-backdrop-filter: blur(32px);
+    border: 1px solid var(--color-border);
+    background: var(--color-card);
+    @apply rounded-3xl p-6 transition-all duration-300;
   }
-  
+
+  .glass-card:hover {
+    @apply shadow-lg transform -translate-y-1;
+  }
+
+  .floating-panel {
+    @apply fixed z-50 rounded-2xl shadow-2xl;
+    backdrop-filter: blur(32px);
+    -webkit-backdrop-filter: blur(32px);
+    border: 1px solid var(--color-border);
+    background: var(--color-card);
+  }
+
   .shimmer {
     background: linear-gradient(
       90deg,
@@ -46,24 +91,33 @@
 }
 
 @keyframes shimmer {
-  0% {
-    background-position: -200% 0;
-  }
-  100% {
-    background-position: 200% 0;
-  }
+  0% { background-position: -200% 0; }
+  100% { background-position: 200% 0; }
 }
 
-/* Bottom Navigation Styling */
-.bottom-nav-item {
-  @apply flex flex-col items-center justify-center gap-1 transition-all duration-300;
+/* Maintain compatibility with Parent PWA */
+.matte-green-theme {
+  --color-background: #F2EDC5;
+  --color-foreground: #313131;
+  --color-primary: #88B04B;
+  background-color: var(--color-background);
+  color: var(--color-foreground);
 }
 
-.bottom-nav-item.active {
-  @apply text-primary scale-110;
+/* Pulsing Animation */
+.pulse-live {
+  animation: pulse-live 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
 }
 
-/* Card Styling */
-.premium-card {
-  @apply bg-card rounded-[24px] p-5 border border-white/5 shadow-2xl;
+@keyframes pulse-live {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50% { opacity: .7; transform: scale(1.1); }
+}
+
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+.no-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
 }

@@ -10,9 +10,19 @@ export const createBus = async (busData) => {
   }
 
   // Check for duplicate GPS Device ID
-  const existingGps = await Bus.findOne({ where: { gpsDeviceId: busData.gpsDeviceId } });
-  if (existingGps) {
-    throw new AppError('GPS Device ID is already assigned to another bus', 400);
+  if (busData.gpsDeviceId) {
+    const existingGps = await Bus.findOne({ where: { gpsDeviceId: busData.gpsDeviceId } });
+    if (existingGps) {
+      throw new AppError('GPS Device ID is already assigned to another bus', 400);
+    }
+  }
+
+  // Check for duplicate Device Identifier (IMEI)
+  if (busData.deviceIdentifier) {
+    const existingIdentifier = await Bus.findOne({ where: { deviceIdentifier: busData.deviceIdentifier } });
+    if (existingIdentifier) {
+      throw new AppError('Device Identifier (IMEI) is already assigned to another bus', 400);
+    }
   }
 
   const school = await School.findByPk(busData.schoolId);
@@ -62,6 +72,13 @@ export const updateBus = async (id, busData) => {
     const existing = await Bus.findOne({ where: { gpsDeviceId: busData.gpsDeviceId } });
     if (existing) {
       throw new AppError('Another bus already uses this GPS Device ID', 400);
+    }
+  }
+
+  if (busData.deviceIdentifier && busData.deviceIdentifier !== bus.deviceIdentifier) {
+    const existing = await Bus.findOne({ where: { deviceIdentifier: busData.deviceIdentifier } });
+    if (existing) {
+      throw new AppError('Another bus already uses this Device Identifier (IMEI)', 400);
     }
   }
 

@@ -1,4 +1,4 @@
-import { Parent, Student, BusLiveLocation } from '../../models/initModels.js';
+import { Parent, Student, BusLiveLocation, Admin, Bus, School } from '../../models/initModels.js';
 import { AppError } from '../../shared/errorHandling/errorHandler.js';
 
 /**
@@ -101,5 +101,54 @@ export const getParentDashboardData = async (parentId) => {
   return {
     parentProfile: parent,
     children: childrenData
+  };
+};
+
+/**
+ * SuperAdmin Statistics
+ */
+export const getSuperAdminStats = async () => {
+  const [schoolsCount, studentsCount, busesCount, adminsCount] = await Promise.all([
+    School.count(),
+    Student.count(),
+    Bus.count(),
+    Admin.count({ where: { role: 'school_admin' } })
+  ]);
+
+  // Fetch school-wise fleet distribution for bar chart
+  const fleetDistribution = await School.findAll({
+    attributes: [
+      'schoolName',
+      [School.sequelize.literal(`(SELECT COUNT(*) FROM buses WHERE buses.school_id = "School".id)`), 'busCount']
+    ],
+    limit: 12,
+    order: [[School.sequelize.literal('"busCount"'), 'DESC']]
+  });
+
+  return {
+    totalSchools: schoolsCount,
+    totalStudents: studentsCount,
+    busFleet: busesCount,
+    activeAdmins: adminsCount,
+    fleetDistribution: fleetDistribution.map(s => ({
+      name: s.schoolName,
+      count: parseInt(s.get('busCount')) || 0
+    }))
+  };
+};
+
+/**
+ * SchoolAdmin Statistics (Filtered by School)
+ */
+export const getSchoolAdminStats = async (schoolId) => {
+  const [students, buses] = await Promise.all([
+    Student.count({ where: { schoolId } }),
+    Bus.count({ where: { schoolId } })
+  ]);
+
+  return {
+    totalStudents: students,
+    busFleet: buses,
+    activeTrips: 0 // Mock for now, requires live tracking status count
   };
 };

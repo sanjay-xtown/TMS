@@ -8,8 +8,13 @@ export const createBusSchema = z.object({
   schoolId: z.string().uuid('Invalid school ID'),
   driverName: z.string().optional().nullable(),
   driverMobileNumber: z.string().optional().nullable(),
-  gpsDeviceId: z.string().min(1, 'GPS Device ID is required'),
+  gpsDeviceId: z.string().optional().nullable(),
+  gpsProvider: z.enum(['TRACCAR', 'SIMULATED']).optional().default('SIMULATED'),
+  deviceIdentifier: z.string().optional().nullable(),
+  trackingStatus: z.enum(['ACTIVE', 'OFFLINE', 'INACTIVE', 'SCHOOL_HOURS_ONLY']).optional().default('INACTIVE'),
   status: z.enum(['ACTIVE', 'INACTIVE']).optional().default('ACTIVE'),
+  morningStartTime: z.string().optional().nullable(),
+  eveningStartTime: z.string().optional().nullable(),
 });
 
 export const updateBusSchema = createBusSchema.partial();

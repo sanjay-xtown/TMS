@@ -11,6 +11,11 @@ const Student = sequelize.define('Student', {
     type: DataTypes.STRING,
     allowNull: false,
   },
+  rollNo: {
+    type: DataTypes.STRING,
+    allowNull: false,
+    unique: true,
+  },
   class: {
     type: DataTypes.STRING,
     allowNull: false,
@@ -50,6 +55,10 @@ const Student = sequelize.define('Student', {
   },
   currentBusId: {
     type: DataTypes.UUID,
+    allowNull: true,
+  },
+  profilePhoto: {
+    type: DataTypes.STRING,
     allowNull: true,
   },
 }, {

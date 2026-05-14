@@ -12,6 +12,7 @@ export const login = async (req, res, next) => {
       ...data,
     });
   } catch (error) {
+    console.error('LOGIN_ERROR_DETAILS:', error);
     next(error);
   }
 };
@@ -46,6 +47,31 @@ export const adminUpdateParent = async (req, res, next) => {
     res.status(200).json({
       status: 'success',
       data: parent,
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
+export const updateFcmToken = async (req, res, next) => {
+  try {
+    const { fcmToken } = req.body;
+    await parentService.updateFcmToken(req.user.id, fcmToken);
+    res.status(200).json({
+      status: 'success',
+      message: 'FCM token updated successfully',
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
+export const getAllParents = async (req, res, next) => {
+  try {
+    const parents = await parentService.getAllParents();
+    res.status(200).json({
+      status: 'success',
+      data: parents,
     });
   } catch (error) {
     next(error);

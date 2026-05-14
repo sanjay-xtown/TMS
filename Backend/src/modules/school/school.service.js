@@ -1,4 +1,6 @@
 import { School } from './school.model.js';
+import { Bus } from '../bus/bus.model.js';
+import sequelize from '../../config/db.js';
 import { AppError } from '../../shared/errorHandling/errorHandler.js';
 
 export const createSchool = async (schoolData) => {
@@ -11,7 +13,21 @@ export const createSchool = async (schoolData) => {
 };
 
 export const getAllSchools = async () => {
-  return await School.findAll();
+  return await School.findAll({
+    attributes: {
+      include: [
+        [
+          sequelize.literal(`(
+            SELECT COUNT(*)
+            FROM buses AS bus
+            WHERE
+              bus.school_id = "School".id
+          )`),
+          'fleet'
+        ]
+      ]
+    }
+  });
 };
 
 export const getSchoolById = async (id) => {

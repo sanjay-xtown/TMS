@@ -32,6 +32,14 @@ const Parent = sequelize.define('Parent', {
     type: DataTypes.TEXT,
     allowNull: false,
   },
+  schoolId: {
+    type: DataTypes.UUID,
+    allowNull: true, // Temporarily allow null to avoid sync issues with existing data
+  },
+  fcmToken: {
+    type: DataTypes.TEXT,
+    allowNull: true,
+  },
 }, {
   tableName: 'parents',
   timestamps: true,

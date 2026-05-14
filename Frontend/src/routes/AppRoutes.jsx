@@ -1,8 +1,13 @@
 import React from 'react';
-import { Routes, Route } from 'react-router-dom';
+import { Routes, Route, Navigate } from 'react-router-dom';
 import { ROUTES } from '../config/routes';
+import { SUPERADMIN_MENU, SCHOOLADMIN_MENU } from '../config/menu';
 
-// My Modules (Parent PWA)
+// Layouts
+import ParentLayout from '../shared/components/ParentLayout';
+import AdminLayout from '../shared/components/AdminLayout';
+
+// Parent PWA Modules
 import SplashScreen from '../modules/auth/SplashScreen';
 import LoginPage from '../modules/auth/LoginPage';
 import ParentDashboard from '../modules/parent/ParentDashboard';
@@ -12,13 +17,35 @@ import MyTrips from '../modules/trip/MyTrips';
 import BusInfo from '../modules/parent/BusInfo';
 import ProfilePage from '../modules/parent/ProfilePage';
 import SettingsPage from '../modules/parent/SettingsPage';
+import DriverSimulation from '../modules/tracking/DriverSimulation';
 
-// Team Placeholders
-const TeamPlaceholder = ({ title }) => (
-  <div className="h-screen flex items-center justify-center bg-black text-white p-6 text-center">
+// SuperAdmin Modules
+import SuperAdminLogin from '../modules/superadmin/pages/SuperAdminLogin';
+import SuperAdminDashboard from '../modules/superadmin/pages/SuperAdminDashboard';
+import SchoolManagement from '../modules/superadmin/pages/SchoolManagement';
+import AdminManagement from '../modules/superadmin/pages/AdminManagement';
+
+// School Admin Modules
+import SchoolAdminLogin from '../modules/schooladmin/pages/SchoolAdminLogin';
+import SchoolAdminDashboard from '../modules/schooladmin/pages/SchoolAdminDashboard';
+import StudentManagement from '../modules/schooladmin/pages/StudentManagement';
+import BusManagement from '../modules/schooladmin/pages/BusManagement';
+import SchoolLiveTracking from '../modules/schooladmin/pages/LiveTracking';
+import ParentManagement from '../modules/schooladmin/pages/ParentManagement';
+import DriverManagement from '../modules/schooladmin/pages/DriverManagement';
+import RouteManagement from '../modules/schooladmin/pages/RouteManagement';
+import TransferManagement from '../modules/schooladmin/pages/TransferManagement';
+import NotificationManagement from '../modules/schooladmin/pages/NotificationManagement';
+
+// Placeholder for remaining pages
+const Placeholder = ({ title }) => (
+  <div className="h-full flex flex-col items-center justify-center p-10 text-center space-y-4">
+    <div className="w-20 h-20 bg-primary/10 rounded-3xl flex items-center justify-center text-primary">
+       <span className="font-black text-2xl">?</span>
+    </div>
     <div>
-      <h1 className="text-2xl font-bold text-primary mb-2">{title}</h1>
-      <p className="text-gray-400 italic">This module is being developed by team members.</p>
+      <h2 className="text-2xl font-black uppercase tracking-tight">{title}</h2>
+      <p className="text-sm font-bold text-foreground/40 uppercase tracking-widest mt-2">This module is under tactical development</p>
     </div>
   </div>
 );
@@ -26,24 +53,47 @@ const TeamPlaceholder = ({ title }) => (
 const AppRoutes = () => {
   return (
     <Routes>
-      {/* Parent PWA Routes */}
+      {/* 1. Parent PWA Routes */}
       <Route path={ROUTES.SPLASH} element={<SplashScreen />} />
       <Route path={ROUTES.LOGIN} element={<LoginPage />} />
-      <Route path={ROUTES.DASHBOARD} element={<ParentDashboard />} />
-      <Route path={ROUTES.TRACKING} element={<LiveTracking />} />
-      <Route path={ROUTES.NOTIFICATIONS} element={<NotificationsPage />} />
-      <Route path={ROUTES.TRIPS} element={<MyTrips />} />
-      <Route path={ROUTES.BUS_INFO} element={<BusInfo />} />
-      <Route path={ROUTES.PROFILE} element={<ProfilePage />} />
-      <Route path={ROUTES.SETTINGS} element={<SettingsPage />} />
+      <Route element={<ParentLayout />}>
+        <Route path={ROUTES.DASHBOARD} element={<ParentDashboard />} />
+        <Route path={ROUTES.TRACKING} element={<LiveTracking />} />
+        <Route path={ROUTES.NOTIFICATIONS} element={<NotificationsPage />} />
+        <Route path={ROUTES.TRIPS} element={<MyTrips />} />
+        <Route path={ROUTES.BUS_INFO} element={<BusInfo />} />
+        <Route path={ROUTES.PROFILE} element={<ProfilePage />} />
+        <Route path={ROUTES.SETTINGS} element={<SettingsPage />} />
+      </Route>
+      <Route path={ROUTES.DRIVER_SIMULATION} element={<DriverSimulation />} />
 
-      {/* Team Member Placeholders */}
-      <Route path={ROUTES.ADMIN_DASHBOARD} element={<TeamPlaceholder title="Admin Dashboard" />} />
-      <Route path={ROUTES.SCHOOLS} element={<TeamPlaceholder title="School Management" />} />
-      <Route path={ROUTES.BUSES} element={<TeamPlaceholder title="Bus Fleet Management" />} />
-      <Route path={ROUTES.STUDENTS} element={<TeamPlaceholder title="Student Records" />} />
-      <Route path={ROUTES.TRANSFERS} element={<TeamPlaceholder title="Bus Transfers" />} />
-      <Route path={ROUTES.SUPPORT} element={<TeamPlaceholder title="Admin Support" />} />
+      {/* 2. SuperAdmin Module */}
+      <Route path={ROUTES.SUPERADMIN_LOGIN} element={<SuperAdminLogin />} />
+      <Route element={<AdminLayout menuItems={SUPERADMIN_MENU} role="Super Admin" />}>
+        <Route path={ROUTES.SUPERADMIN_DASHBOARD} element={<SuperAdminDashboard />} />
+        <Route path={ROUTES.SCHOOL_MANAGEMENT} element={<SchoolManagement />} />
+        <Route path={ROUTES.ADMIN_MANAGEMENT} element={<AdminManagement />} />
+        <Route path={ROUTES.PLATFORM_SETTINGS} element={<Placeholder title="Platform Settings" />} />
+        <Route path={ROUTES.REPORTS_ANALYTICS} element={<Placeholder title="Enterprise Reports" />} />
+      </Route>
+
+      {/* 3. School Admin Module */}
+      <Route path={ROUTES.SCHOOLADMIN_LOGIN} element={<SchoolAdminLogin />} />
+      <Route element={<AdminLayout menuItems={SCHOOLADMIN_MENU} role="School Admin" />}>
+        <Route path={ROUTES.SCHOOLADMIN_DASHBOARD} element={<SchoolAdminDashboard />} />
+        <Route path={ROUTES.STUDENT_MANAGEMENT} element={<StudentManagement />} />
+        <Route path={ROUTES.BUS_MANAGEMENT} element={<BusManagement />} />
+        <Route path={ROUTES.LIVE_TRACKING} element={<SchoolLiveTracking />} />
+        <Route path={ROUTES.PARENT_MANAGEMENT} element={<ParentManagement />} />
+        <Route path={ROUTES.DRIVER_MANAGEMENT} element={<DriverManagement />} />
+        <Route path={ROUTES.ROUTE_MANAGEMENT} element={<RouteManagement />} />
+        <Route path={ROUTES.TRANSFER_MANAGEMENT} element={<TransferManagement />} />
+        <Route path={ROUTES.NOTIFICATION_MANAGEMENT} element={<NotificationManagement />} />
+        <Route path={ROUTES.SCHOOL_REPORTS} element={<Placeholder title="Campus Reports" />} />
+      </Route>
+
+      {/* Catch all - Redirect to splash or login */}
+      <Route path="*" element={<Navigate to={ROUTES.SPLASH} replace />} />
     </Routes>
   );
 };

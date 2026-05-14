@@ -1,6 +1,8 @@
 import Parent from './parent.model.js';
 import Student from '../student/student.model.js';
-import { comparePassword } from '../../shared/auth/bcrypt.js';
+import Bus from '../bus/bus.model.js';
+import School from '../school/school.model.js';
+import { comparePassword, hashPassword } from '../../shared/auth/bcrypt.js';
 import { generateToken } from '../../shared/auth/jwt.js';
 import { AppError } from '../../shared/errorHandling/errorHandler.js';
 
@@ -43,7 +45,18 @@ export const getParentProfile = async (id) => {
           'section', 
           'gender', 
           'pickupPoint', 
+          'pickupLat',
+          'pickupLng',
+          'profilePhoto',
           'currentBusId'
+        ],
+        include: [
+          { 
+            model: Bus, 
+            as: 'bus', 
+            attributes: ['id', 'busNumber', 'busRegisterNumber', 'driverName', 'driverMobileNumber', 'capacity'] 
+          },
+          { model: School, as: 'school', attributes: ['id', 'schoolName', 'latitude', 'longitude'] }
         ]
       }
     ]
@@ -70,4 +83,32 @@ export const updateParent = async (id, updateData) => {
   }
 
   return await parent.update(updateData);
+};
+
+/**
+ * Update Parent FCM Token
+ */
+export const updateFcmToken = async (id, fcmToken) => {
+  const parent = await Parent.findByPk(id);
+  if (!parent) {
+    throw new AppError('Parent not found', 404);
+  }
+  
+  return await parent.update({ fcmToken });
+};
+
+/**
+ * Get all parents (Admin)
+ */
+export const getAllParents = async () => {
+  return await Parent.findAll({
+    attributes: { exclude: ['password'] },
+    include: [
+      {
+        model: Student,
+        as: 'children',
+        attributes: ['studentName']
+      }
+    ]
+  });
 };

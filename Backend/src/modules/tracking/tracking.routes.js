@@ -17,6 +17,8 @@ router.post('/update-location', trackingController.updateLiveLocation);
  * @desc    Get current location of a specific bus
  * @access  Private
  */
-router.get('/:busId', authMiddleware, trackingController.getBusLocation);
+router.get('/live-location/:busId', authMiddleware, trackingController.getBusLocation);
+
+router.get('/fleet/status', authMiddleware, trackingController.getAllFleetLocations);
 
 export default router;

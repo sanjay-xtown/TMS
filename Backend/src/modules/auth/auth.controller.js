@@ -39,3 +39,15 @@ export const register = async (req, res, next) => {
     next(error);
   }
 };
+
+export const getAllAdmins = async (req, res, next) => {
+  try {
+    const admins = await authService.getAllAdmins();
+    res.status(200).json({
+      status: 'success',
+      data: admins,
+    });
+  } catch (error) {
+    next(error);
+  }
+};

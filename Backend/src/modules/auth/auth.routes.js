@@ -10,4 +10,7 @@ router.post('/login', authController.login);
 // Register admin: Protected for superadmins only
 router.post('/register-admin', authMiddleware, roleMiddleware('superadmin'), authController.register);
 
+// Get all admins: Protected for superadmins only
+router.get('/admins', authMiddleware, roleMiddleware('superadmin'), authController.getAllAdmins);
+
 export default router;

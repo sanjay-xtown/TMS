@@ -29,3 +29,16 @@ export const getBusLocation = async (req, res, next) => {
     next(error);
   }
 };
+
+export const getAllFleetLocations = async (req, res, next) => {
+  try {
+    const fleetStatus = await trackingService.getAllFleetLocations();
+    res.status(200).json({
+      status: 'success',
+      count: fleetStatus.length,
+      data: fleetStatus,
+    });
+  } catch (error) {
+    next(error);
+  }
+};
