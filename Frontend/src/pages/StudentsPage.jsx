@@ -46,15 +46,7 @@ const validateParentForm = (data) => {
   return null;
 };
 
-// ─── Shared input style ───────────────────────────────────────────────────────
-const IS = {
-  width: '100%',
-  padding: '10px',
-  borderRadius: '8px',
-  border: '1px solid #e2e8f0',
-  color: '#1e293b',
-  background: '#fff',
-};
+// ─── Shared input style removed in favor of CSS classes ───────────────────────
 
 // ─── Component ────────────────────────────────────────────────────────────────
 const StudentsPage = () => {
@@ -308,23 +300,25 @@ const StudentsPage = () => {
 
         {/* ══════════════════ CREATE STUDENT MODAL ══════════════════════ */}
         {isModalOpen && (
-          <div style={{ position: 'fixed', top: 0, left: 0, right: 0, bottom: 0, background: 'rgba(0,0,0,0.6)', display: 'flex', alignItems: 'flex-start', justifyContent: 'center', zIndex: 1000, overflowY: 'auto', padding: '20px 0' }}>
-            <div className="auth-card" style={{ width: '100%', maxWidth: '540px', position: 'relative', margin: 'auto' }}>
-
-              {/* Close */}
-              <button onClick={handleCloseModal} style={{ position: 'absolute', top: '15px', right: '15px', background: 'none', border: 'none', color: 'white', cursor: 'pointer' }}>
-                <X size={24} />
-              </button>
-
-              <h2 style={{ marginBottom: '6px' }}>Add New Student</h2>
-              <p style={{ fontSize: '0.8rem', opacity: 0.6, marginBottom: '20px' }}>Fill in student details and link a parent below.</p>
-
-              {/* Form-level error */}
-              {formError && (
-                <div style={{ background: '#fee2e2', color: '#dc2626', padding: '10px 14px', borderRadius: '8px', marginBottom: '16px', fontSize: '0.875rem' }}>
-                  {formError}
+          <div className="modal-overlay" style={{ overflowY: 'auto', padding: '20px 0' }}>
+            <div className="modal-content" style={{ margin: 'auto', maxWidth: '540px' }}>
+              <div className="modal-header">
+                <div>
+                  <h2 style={{ marginBottom: '4px' }}>Add New Student</h2>
+                  <p style={{ fontSize: '0.85rem', color: '#64748b' }}>Fill in student details and link a parent below.</p>
                 </div>
-              )}
+                <button onClick={handleCloseModal} className="close-btn">
+                  <X size={20} />
+                </button>
+              </div>
+
+              <div className="modal-form">
+                {/* Form-level error */}
+                {formError && (
+                  <div style={{ background: '#fee2e2', color: '#dc2626', padding: '10px 14px', borderRadius: '8px', marginBottom: '16px', fontSize: '0.875rem' }}>
+                    {formError}
+                  </div>
+                )}
 
 
 <form onSubmit={handleCreateStudent} className="auth-form">
@@ -339,7 +333,7 @@ const StudentsPage = () => {
 
                 <div className="form-group">
                   <label>Student Name *</label>
-                  <input type="text" className="auth-input-wrapper" style={IS}
+                  <input type="text"
                     value={formData.studentName}
                     onChange={(e) => setFormData({ ...formData, studentName: e.target.value })}
                     required />
@@ -348,14 +342,14 @@ const StudentsPage = () => {
                 <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '15px' }}>
                   <div className="form-group">
                     <label>Class *</label>
-                    <input type="text" className="auth-input-wrapper" style={IS}
+                    <input type="text"
                       value={formData.class}
                       onChange={(e) => setFormData({ ...formData, class: e.target.value })}
                       required />
                   </div>
                   <div className="form-group">
                     <label>Section *</label>
-                    <input type="text" className="auth-input-wrapper" style={IS}
+                    <input type="text"
                       value={formData.section}
                       onChange={(e) => setFormData({ ...formData, section: e.target.value })}
                       required />
@@ -364,9 +358,11 @@ const StudentsPage = () => {
 
                 <div className="form-group">
                   <label>Assign Bus (Optional)</label>
-                  <select className="auth-input-wrapper" style={IS}
+                  <select
                     value={formData.busId}
-                    onChange={(e) => setFormData({ ...formData, busId: e.target.value })}>
+                    onChange={(e) => setFormData({ ...formData, busId: e.target.value })}
+                    style={{ padding: '10px 14px', border: '1.5px solid #e2e8f0', borderRadius: '10px', fontSize: '0.9375rem', background: '#f8fafc' }}
+                  >
                     <option value="">Select Bus</option>
                     {buses.map((b) => (
                       <option key={b.id} value={b.id}>{b.busNumber} — {b.routeName ?? ''}</option>
@@ -374,17 +370,17 @@ const StudentsPage = () => {
                   </select>
                 </div>
 
-                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '15px' }}>
+                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '15px', marginTop: '15px' }}>
                   <div className="form-group">
                     <label>Address *</label>
-                    <input type="text" className="auth-input-wrapper" style={IS}
+                    <input type="text"
                       value={formData.address}
                       onChange={(e) => setFormData({ ...formData, address: e.target.value })}
                       required />
                   </div>
                   <div className="form-group">
                     <label>Pickup Point *</label>
-                    <input type="text" className="auth-input-wrapper" style={IS}
+                    <input type="text"
                       value={formData.pickupPoint}
                       onChange={(e) => setFormData({ ...formData, pickupPoint: e.target.value })}
                       required />
@@ -415,9 +411,11 @@ const StudentsPage = () => {
                   {parentMode === PARENT_MODE.SELECT && (
                     <div className="form-group" style={{ marginBottom: 0 }}>
                       <label>Select Parent</label>
-                      <select className="auth-input-wrapper" style={IS}
+                      <select
                         value={selectedParentId}
-                        onChange={(e) => setSelectedParentId(e.target.value)}>
+                        onChange={(e) => setSelectedParentId(e.target.value)}
+                        style={{ padding: '10px 14px', border: '1.5px solid #e2e8f0', borderRadius: '10px', fontSize: '0.9375rem', background: '#f8fafc' }}
+                      >
                         <option value="">— No Parent (skip) —</option>
                         {parents.map((p) => (
                           <option key={p.id} value={p.id}>
@@ -466,15 +464,15 @@ const StudentsPage = () => {
 
                           <div className="form-group">
                             <label style={{ fontSize: '0.82rem' }}>Parent Name *</label>
-                            <input type="text" className="auth-input-wrapper" style={IS}
+                            <input type="text"
                               placeholder="e.g. Ramesh Kumar"
                               value={parentForm.parentName}
                               onChange={(e) => setParentForm({ ...parentForm, parentName: e.target.value })} />
                           </div>
 
-                          <div className="form-group">
+                          <div className="form-group" style={{ marginTop: '10px' }}>
                             <label style={{ fontSize: '0.82rem' }}>Mobile Number * <span style={{ opacity: 0.5 }}>(min 10 digits — last 4 = auto password)</span></label>
-                            <input type="text" className="auth-input-wrapper" style={IS}
+                            <input type="text"
                               placeholder="e.g. 9876543210"
                               value={parentForm.mobileNumber}
                               onChange={(e) => setParentForm({ ...parentForm, mobileNumber: e.target.value })} />
@@ -497,18 +495,13 @@ const StudentsPage = () => {
                   )}
                 </div>
 
-                {/* ── Submit ──────────────────────────────────────────────── */}
-                <button
-                  type="submit"
-                  className="auth-submit-btn"
-                  disabled={submitting || creatingParent}
-                  style={{ marginTop: '20px' }}
-                >
-                  {submitting
-                    ? <><Loader2 className="spinner" size={20} /> Saving...</>
-                    : 'Save Student'}
-                </button>
+                <div className="modal-footer" style={{ marginTop: '20px', padding: '1.5rem 0 0 0', background: 'none', borderTop: 'none' }}>
+                  <button type="submit" className="btn-primary" disabled={submitting || creatingParent}>
+                    {submitting ? <><Loader2 className="spinner" size={20} /> Saving...</> : 'Save Student'}
+                  </button>
+                </div>
               </form>
+              </div>
             </div>
           </div>
         )}

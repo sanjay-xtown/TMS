@@ -3,6 +3,7 @@ import Header from '../components/Header';
 import StatCard from '../components/StatCard';
 import { Bus, Activity, Users } from 'lucide-react';
 import DataTable from '../components/DataTable';
+import BusMapWidget from '../components/BusMapWidget';
 import { studentService, busService } from '../services/api';
 
 const SchoolAdminDashboard = () => {
@@ -106,6 +107,9 @@ const SchoolAdminDashboard = () => {
             data={recentBuses}
           />
         </div>
+
+        {/* Live Bus Tracking Widget */}
+        <BusMapWidget />
       </div>
     </div>
   );

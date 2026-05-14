@@ -344,14 +344,7 @@ Please keep this safe.`
     },
   ];
 
-  const inputStyle = {
-    width: '100%',
-    padding: '10px',
-    borderRadius: '8px',
-    border: '1px solid #e2e8f0',
-    color: '#1e293b',
-    background: '#fff',
-  };
+  // ─── Input styling classes will be used instead of inline ─────────────
 
   return (
     <div className="dashboard-container">
@@ -441,21 +434,22 @@ Please keep this safe.`
 
         {/* ── Create Parent Modal ────────────────────────────────────────── */}
         {isModalOpen && (
-          <div style={{ position: 'fixed', top: 0, left: 0, right: 0, bottom: 0, background: 'rgba(0,0,0,0.5)', display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 1000 }}>
-            <div className="auth-card" style={{ width: '100%', maxWidth: '500px', position: 'relative' }}>
-              {/* Close */}
-              <button onClick={handleCloseModal} style={{ position: 'absolute', top: '15px', right: '15px', background: 'none', border: 'none', color: 'white', cursor: 'pointer' }}>
-                <X size={24} />
-              </button>
+          <div className="modal-overlay" style={{ overflowY: 'auto', padding: '20px 0' }}>
+            <div className="modal-content" style={{ margin: 'auto', maxWidth: '500px' }}>
+              <div className="modal-header">
+                <h2>Add New Parent</h2>
+                <button onClick={handleCloseModal} className="close-btn">
+                  <X size={20} />
+                </button>
+              </div>
 
-              <h2 style={{ marginBottom: '20px' }}>Add New Parent</h2>
-
-              {/* Form-level error */}
-              {formError && (
-                <div style={{ background: '#fee2e2', color: '#dc2626', padding: '10px 14px', borderRadius: '8px', marginBottom: '16px', fontSize: '0.875rem' }}>
-                  {formError}
-                </div>
-              )}
+              <div className="modal-form">
+                {/* Form-level error */}
+                {formError && (
+                  <div style={{ background: '#fee2e2', color: '#dc2626', padding: '10px 14px', borderRadius: '8px', marginBottom: '16px', fontSize: '0.875rem' }}>
+                    {formError}
+                  </div>
+                )}
 
               {createdParent ? (
                 <div style={{ textAlign: 'center', padding: '10px 0' }}>
@@ -516,8 +510,6 @@ Please keep this safe.`
                     <label>Parent Name *</label>
                     <input
                       type="text"
-                      className="auth-input-wrapper"
-                      style={inputStyle}
                       value={formData.parentName}
                       onChange={(e) => setFormData({ ...formData, parentName: e.target.value })}
                       required
@@ -525,12 +517,10 @@ Please keep this safe.`
                   </div>
 
                   {/* Mobile Number */}
-                  <div className="form-group">
-                    <label>Phone Number * (last 4 digits = auto password)</label>
+                  <div className="form-group" style={{ marginTop: '15px' }}>
+                    <label>Phone Number * <span style={{ opacity: 0.6, fontWeight: 'normal' }}>(last 4 digits = auto password)</span></label>
                     <input
                       type="text"
-                      className="auth-input-wrapper"
-                      style={inputStyle}
                       placeholder="e.g. 9876543210"
                       value={formData.mobileNumber}
                       onChange={(e) => setFormData({ ...formData, mobileNumber: e.target.value })}
@@ -539,13 +529,12 @@ Please keep this safe.`
                   </div>
 
                   {/* Link Student (optional) */}
-                  <div className="form-group">
+                  <div className="form-group" style={{ marginTop: '15px' }}>
                     <label>Link Student (Optional)</label>
                     <select
-                      className="auth-input-wrapper"
-                      style={inputStyle}
                       value={formData.studentId}
                       onChange={(e) => setFormData({ ...formData, studentId: e.target.value })}
+                      style={{ padding: '10px 14px', border: '1.5px solid #e2e8f0', borderRadius: '10px', fontSize: '0.9375rem', background: '#f8fafc' }}
                     >
                       <option value="">Select Student</option>
                       {students.map((s) => (
@@ -555,26 +544,23 @@ Please keep this safe.`
                   </div>
 
                   {/* Address */}
-                  <div className="form-group">
+                  <div className="form-group" style={{ marginTop: '15px' }}>
                     <label>Address (Optional)</label>
                     <input
                       type="text"
-                      className="auth-input-wrapper"
-                      style={inputStyle}
                       value={formData.address}
                       onChange={(e) => setFormData({ ...formData, address: e.target.value })}
                     />
                   </div>
 
-                  <p style={{ fontSize: '0.8rem', opacity: 0.7, marginBottom: '20px' }}>
-                    * Password is auto-generated from the last 4 digits of the mobile number.
-                  </p>
-
-                  <button type="submit" className="auth-submit-btn" disabled={submitting}>
-                    {submitting ? <Loader2 className="spinner" size={20} /> : 'Save Parent'}
-                  </button>
+                  <div className="modal-footer" style={{ marginTop: '25px', padding: '1.5rem 0 0 0', background: 'none', borderTop: 'none' }}>
+                    <button type="submit" className="btn-primary" disabled={submitting}>
+                      {submitting ? <><Loader2 className="spinner" size={20} /> Saving...</> : 'Save Parent'}
+                    </button>
+                  </div>
                 </form>
               )}
+              </div>
             </div>
           </div>
         )}

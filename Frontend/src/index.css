@@ -1,25 +1,28 @@
 @import "tailwindcss";
 
 @theme {
-  /* Light Mode / Base */
-  --color-background: #F8F9FA;
-  --color-foreground: #121416;
+  /* Light Mode / Base - Matching the "minute green" look */
+  --color-background: #f7f8f3;
+  --color-foreground: #1a202c;
 
-  /* Matte Olive Green brand */
-  --color-primary: #88B04B;
-  --color-accent: #88B04B;
+  /* Vibrant Green brand from image */
+  --color-primary: #79b14b;
+  --color-accent: #e9f2e2;
 
   /* Surface panels */
-  --color-card: rgba(255, 255, 255, 0.6);
-  --color-muted: rgba(18, 20, 22, 0.75);
-  --color-border: rgba(18, 20, 22, 0.08);
+  --color-card: #ffffff;
+  --color-sidebar: #ffffff;
+  --color-muted: #64748b;
+  --color-border: #e2e8f0;
 
-  /* Accents */
-  --color-amber: #F59E0B;
-  --color-soft-red: #EF4444;
+  /* Accents from cards */
+  --color-blue-accent: #3b82f6;
+  --color-orange-accent: #f59e0b;
+  --color-red-accent: #ef4444;
 
-  --radius-lg: 1.5rem;
-  --radius-md: 1rem;
+  --radius-xl: 1.5rem;
+  --radius-lg: 1rem;
+  --radius-md: 0.75rem;
   --radius-sm: 0.5rem;
 }
 

@@ -16,17 +16,20 @@ const Header = ({ title }) => {
 
   return (
     <header className="top-header">
-      <div className="header-title" style={{ display: 'flex', alignItems: 'center', gap: '15px' }}>
-        <h1>{title}</h1>
-        {role === 'schooladmin' && schoolName && (
-          <div style={{ display: 'flex', alignItems: 'center', gap: '5px', background: 'rgba(59, 130, 246, 0.1)', color: '#3b82f6', padding: '4px 10px', borderRadius: '20px', fontSize: '0.875rem', fontWeight: 600 }}>
-            <School size={14} />
-            {schoolName}
-          </div>
-        )}
+      <div className="header-search">
+        <div className="search-box" style={{ width: '360px' }}>
+          <input type="text" placeholder="Search anything..." />
+          <span className="search-hint" style={{ position: 'absolute', right: '12px', top: '50%', transform: 'translateY(-50%)', background: '#f1f5f9', padding: '2px 6px', borderRadius: '4px', fontSize: '10px', color: '#64748b', fontWeight: 700, border: '1px solid #e2e8f0' }}>Ctrl K</span>
+        </div>
       </div>
 
       <div className="header-actions">
+        {role === 'schooladmin' && schoolName && (
+          <div style={{ display: 'flex', alignItems: 'center', gap: '8px', background: 'var(--sidebar-active)', color: 'var(--primary)', padding: '6px 14px', borderRadius: '50px', fontSize: '0.8125rem', fontWeight: 700 }}>
+            <School size={16} />
+            {schoolName}
+          </div>
+        )}
         <div className="user-profile">
           <div className="user-avatar">
             <User size={18} />

@@ -42,8 +42,8 @@ const Sidebar = () => {
   return (
     <aside className="sidebar">
       <div className="sidebar-brand">
-        <div className="brand-logo">BT</div>
-        <span className="brand-name">BusTrack</span>
+        <div className="brand-logo">🚌</div>
+        <span className="brand-name">Bus Tracking System</span>
       </div>
 
       <nav className="sidebar-menu">

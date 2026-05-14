@@ -109,10 +109,10 @@ const SuperAdminDashboard = () => {
 
       <div className="content-area">
         <div className="stats-grid">
-          <StatCard label="Total Schools" value={stats.schools} icon={<School size={24} />} color="blue" />
-          <StatCard label="School Admins" value={stats.admins} icon={<Users size={24} />} color="green" />
-          <StatCard label="Active Buses" value={stats.buses} icon={<Bus size={24} />} color="orange" />
-          <StatCard label="Total Students" value={stats.students} icon={<GraduationCap size={24} />} color="purple" />
+          <StatCard label="Total Schools" value={stats.schools} icon={<School size={24} />} color="blue" trend="up" trendValue="+12%" />
+          <StatCard label="School Admins" value={stats.admins} icon={<Users size={24} />} color="green" trend="up" trendValue="+8%" />
+          <StatCard label="Active Buses" value={stats.buses} icon={<Bus size={24} />} color="orange" trend="up" trendValue="+15%" />
+          <StatCard label="Total Students" value={stats.students} icon={<GraduationCap size={24} />} color="purple" trend="up" trendValue="+5%" />
         </div>
 
         <div className="charts-grid">
